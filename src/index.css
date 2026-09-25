@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: 'Syne', 'Space Grotesk', sans-serif;
+
+  --color-range-bg: #050505;
+  --color-range-surface: #0c0c0c;
+  --color-range-elevated: #141414;
+  --color-range-border: #222222;
+  --color-range-text: #F2F2F2;
+  --color-range-dim: #858585;
+  --color-range-muted: #555555;
+  --color-range-red: #FF1A1A;
+  --color-range-red-hover: #ff3838;
+  --color-range-red-glow: rgba(255, 26, 26, 0.4);
+}
+
+:root {
+  --accent-red: #FF1A1A;
+  --bg-dark: #050505;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+  border-left: 1px solid #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF1A1A;
+}
+
+/* Subtle scanlines effect for HUD / Technical feel */
+.scanlines-overlay {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+}
+
+/* Technical grid background */
+.tech-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.tech-grid-dense {
+  background-image: 
+    linear-gradient(to right, rgba(255, 26, 26, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 26, 26, 0.06) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Corner bracket decorations */
+.corner-bracket {
+  position: relative;
+}
+.corner-bracket::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 8px;
+  height: 8px;
+  border-top: 1px solid #FF1A1A;
+  border-left: 1px solid #FF1A1A;
+}
+.corner-bracket::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 1px solid #FF1A1A;
+  border-right: 1px solid #FF1A1A;
+}
+
+/* Range Red Glow */
+.glow-red {
+  box-shadow: 0 0 25px rgba(255, 26, 26, 0.35);
+}
+
+.glow-red-sm {
+  box-shadow: 0 0 10px rgba(255, 26, 26, 0.25);
+}
+
+.text-glow-red {
+  text-shadow: 0 0 12px rgba(255, 26, 26, 0.7);
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
