@@ -6,7 +6,9 @@ import {
   ProceduralShaderMaterial,
   ToonShaderMaterial,
   FresnelShaderMaterial,
-  GlitchShaderMaterial
+  GlitchShaderMaterial,
+  IsoLatticeShaderMaterial,
+  InterferenceMeshShaderMaterial,
 } from '../../shaders/shaders';
 import type { ShaderRenderMode } from '../../types/graphics';
 
@@ -32,6 +34,10 @@ export const TheRedCube: React.FC<TheRedCubeProps> = ({
   const meshRef = useRef<THREE.Mesh>(null);
   const wireMeshRef = useRef<THREE.LineSegments>(null);
   const pointsRef = useRef<THREE.Points>(null);
+  const autoRotX = useRef<number>(0);
+  const autoRotY = useRef<number>(0);
+  const parallaxRotX = useRef<number>(0);
+  const parallaxRotY = useRef<number>(0);
   const { rangeSettings, reduceMotion } = useGraphics();
 
   const currentMode = mode || rangeSettings.shaderMode;
@@ -58,6 +64,16 @@ export const TheRedCube: React.FC<TheRedCubeProps> = ({
   const glitchMat = useMemo(() => new THREE.ShaderMaterial({
     ...GlitchShaderMaterial,
     uniforms: THREE.UniformsUtils.clone(GlitchShaderMaterial.uniforms)
+  }), []);
+
+  const isoLatticeMat = useMemo(() => new THREE.ShaderMaterial({
+    ...IsoLatticeShaderMaterial,
+    uniforms: THREE.UniformsUtils.clone(IsoLatticeShaderMaterial.uniforms)
+  }), []);
+
+  const interferenceMat = useMemo(() => new THREE.ShaderMaterial({
+    ...InterferenceMeshShaderMaterial,
+    uniforms: THREE.UniformsUtils.clone(InterferenceMeshShaderMaterial.uniforms)
   }), []);
 
   // Standard PBR Material (Range Engine Default)
@@ -148,34 +164,52 @@ export const TheRedCube: React.FC<TheRedCubeProps> = ({
         return glitchMat;
       case 'CUSTOM':
         return proceduralMat;
+      case 'ISO_LATTICE':
+        return isoLatticeMat;
+      case 'INTERFERENCE':
+        return interferenceMat;
       case 'DEFAULT':
       default:
         return standardMat;
     }
-  }, [currentMode, wireOnlyMat, toonMat, fresnelMat, glassMat, metallicMat, glitchMat, proceduralMat, standardMat]);
+  }, [currentMode, wireOnlyMat, toonMat, fresnelMat, glassMat, metallicMat, glitchMat, proceduralMat, isoLatticeMat, interferenceMat, standardMat]);
 
-  // Animation frame loop
+  // Animation frame loop with safe delta clamping
   useFrame((state, delta) => {
+    // Prevent delta spikes while tab is inactive
+    if (typeof document !== 'undefined' && document.hidden) return;
+    const safeDelta = Math.min(delta, 0.05);
+
     const time = state.clock.getElapsedTime();
 
     // Update shader uniforms
     if (proceduralMat.uniforms.uTime) proceduralMat.uniforms.uTime.value = time;
     if (fresnelMat.uniforms.uTime) fresnelMat.uniforms.uTime.value = time;
     if (glitchMat.uniforms.uTime) glitchMat.uniforms.uTime.value = time;
+    if (isoLatticeMat.uniforms.uTime) isoLatticeMat.uniforms.uTime.value = time;
+    if (interferenceMat.uniforms.uTime) interferenceMat.uniforms.uTime.value = time;
 
-    const rotDelta = reduceMotion ? 0.05 * delta : currentSpeed * delta;
+    const rotDelta = reduceMotion ? 0.05 * safeDelta : currentSpeed * safeDelta;
+    autoRotX.current = (autoRotX.current + rotDelta * 0.7) % (Math.PI * 2);
+    autoRotY.current = (autoRotY.current + rotDelta) % (Math.PI * 2);
+
+    // Mouse interactivity parallax
+    if (interactive && !reduceMotion) {
+      const targetX = (state.pointer.x * Math.PI) / 8;
+      const targetY = (state.pointer.y * Math.PI) / 8;
+      parallaxRotX.current = THREE.MathUtils.lerp(parallaxRotX.current, -targetY, 0.05);
+      parallaxRotY.current = THREE.MathUtils.lerp(parallaxRotY.current, targetX, 0.05);
+    } else {
+      parallaxRotX.current = 0;
+      parallaxRotY.current = 0;
+    }
+
+    const currentFinalRotX = autoRotX.current + parallaxRotX.current;
+    const currentFinalRotY = autoRotY.current + parallaxRotY.current;
 
     if (meshRef.current) {
-      meshRef.current.rotation.x += rotDelta * 0.7;
-      meshRef.current.rotation.y += rotDelta;
-
-      // Mouse interactivity parallax
-      if (interactive && !reduceMotion) {
-        const targetX = (state.pointer.x * Math.PI) / 8;
-        const targetY = (state.pointer.y * Math.PI) / 8;
-        meshRef.current.rotation.y += (targetX - meshRef.current.rotation.y * 0.1) * 0.02;
-        meshRef.current.rotation.x += (-targetY - meshRef.current.rotation.x * 0.1) * 0.02;
-      }
+      meshRef.current.rotation.x = currentFinalRotX;
+      meshRef.current.rotation.y = currentFinalRotY;
     }
 
     if (wireMeshRef.current && meshRef.current) {
@@ -184,8 +218,8 @@ export const TheRedCube: React.FC<TheRedCubeProps> = ({
     }
 
     if (pointsRef.current) {
-      pointsRef.current.rotation.x += rotDelta * 0.7;
-      pointsRef.current.rotation.y += rotDelta;
+      pointsRef.current.rotation.x = currentFinalRotX;
+      pointsRef.current.rotation.y = currentFinalRotY;
 
       // Pulse particle positions when in particles mode
       const posAttr = particlesGeometry.attributes.position;

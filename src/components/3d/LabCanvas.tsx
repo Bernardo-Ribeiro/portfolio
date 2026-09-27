@@ -112,6 +112,9 @@ export const LabProceduralMesh: React.FC = () => {
   }, []);
 
   useFrame((state, delta) => {
+    if (typeof document !== 'undefined' && document.hidden) return;
+    const safeDelta = Math.min(delta, 0.05);
+
     const t = state.clock.getElapsedTime();
     customShader.uniforms.uTime.value = t * labSettings.noiseSpeed;
     customShader.uniforms.uDistortion.value = labSettings.distortion;
@@ -119,8 +122,8 @@ export const LabProceduralMesh: React.FC = () => {
     customShader.uniforms.uIntensity.value = labSettings.intensity;
 
     if (meshRef.current && !reduceMotion) {
-      meshRef.current.rotation.y += delta * 0.4;
-      meshRef.current.rotation.x += delta * 0.2;
+      meshRef.current.rotation.y = (meshRef.current.rotation.y + safeDelta * 0.4) % (Math.PI * 2);
+      meshRef.current.rotation.x = (meshRef.current.rotation.x + safeDelta * 0.2) % (Math.PI * 2);
     }
   });
 
@@ -140,9 +143,12 @@ export const LabLightingScene: React.FC = () => {
   const { labSettings, reduceMotion } = useGraphics();
 
   useFrame((_, delta) => {
+    if (typeof document !== 'undefined' && document.hidden) return;
+    const safeDelta = Math.min(delta, 0.05);
+
     if (cubeRef.current && !reduceMotion) {
-      cubeRef.current.rotation.y += delta * 0.3;
-      cubeRef.current.rotation.x += delta * 0.2;
+      cubeRef.current.rotation.y = (cubeRef.current.rotation.y + safeDelta * 0.3) % (Math.PI * 2);
+      cubeRef.current.rotation.x = (cubeRef.current.rotation.x + safeDelta * 0.2) % (Math.PI * 2);
     }
 
     if (lightRef.current) {
@@ -222,14 +228,17 @@ export const LabTopologyScene: React.FC = () => {
   }), []);
 
   useFrame((_, delta) => {
-    const rot = reduceMotion ? 0.05 * delta : 0.5 * delta;
+    if (typeof document !== 'undefined' && document.hidden) return;
+    const safeDelta = Math.min(delta, 0.05);
+
+    const rot = reduceMotion ? 0.05 * safeDelta : 0.5 * safeDelta;
     if (meshRef.current) {
-      meshRef.current.rotation.y += rot;
-      meshRef.current.rotation.x += rot * 0.7;
+      meshRef.current.rotation.y = (meshRef.current.rotation.y + rot) % (Math.PI * 2);
+      meshRef.current.rotation.x = (meshRef.current.rotation.x + rot * 0.7) % (Math.PI * 2);
     }
     if (pointsRef.current) {
-      pointsRef.current.rotation.y += rot;
-      pointsRef.current.rotation.x += rot * 0.7;
+      pointsRef.current.rotation.y = (pointsRef.current.rotation.y + rot) % (Math.PI * 2);
+      pointsRef.current.rotation.x = (pointsRef.current.rotation.x + rot * 0.7) % (Math.PI * 2);
     }
   });
 

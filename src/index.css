@@ -5,21 +5,21 @@
   --font-mono: 'JetBrains Mono', monospace;
   --font-display: 'Syne', 'Space Grotesk', sans-serif;
 
-  --color-range-bg: #050505;
-  --color-range-surface: #0c0c0c;
-  --color-range-elevated: #141414;
-  --color-range-border: #222222;
-  --color-range-text: #F2F2F2;
-  --color-range-dim: #858585;
-  --color-range-muted: #555555;
-  --color-range-red: #FF1A1A;
-  --color-range-red-hover: #ff3838;
-  --color-range-red-glow: rgba(255, 26, 26, 0.4);
+  --color-range-bg: #0b0d13;
+  --color-range-surface: #11141d;
+  --color-range-elevated: #161a26;
+  --color-range-border: #1f2537;
+  --color-range-text: #f1f5f9;
+  --color-range-dim: #94a3b8;
+  --color-range-muted: #64748b;
+  --color-range-red: #ff2b2b;
+  --color-range-red-hover: #ff4d4d;
+  --color-range-red-glow: rgba(255, 43, 43, 0.3);
 }
 
 :root {
-  --accent-red: #FF1A1A;
-  --bg-dark: #050505;
+  --accent-red: #ff2b2b;
+  --bg-dark: #0b0d13;
 }
 
 /* Custom Scrollbar */
@@ -29,49 +29,35 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #050505;
-  border-left: 1px solid #1a1a1a;
+  background: #0b0d13;
+  border-left: 1px solid #161a26;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2a2a2a;
+  background: #252b3d;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #FF1A1A;
+  background: #ff2b2b;
 }
 
-/* Subtle scanlines effect for HUD / Technical feel */
-.scanlines-overlay {
-  background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.25) 50%
-  ), linear-gradient(
-    90deg,
-    rgba(255, 0, 0, 0.03),
-    rgba(0, 255, 0, 0.01),
-    rgba(0, 0, 255, 0.03)
-  );
-  background-size: 100% 4px, 6px 100%;
-  pointer-events: none;
-}
-
-/* Technical grid background */
+/* Technical grid background with soft slate dots */
 .tech-grid {
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
 .tech-grid-dense {
   background-image: 
-    linear-gradient(to right, rgba(255, 26, 26, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 26, 26, 0.06) 1px, transparent 1px);
-  background-size: 16px 16px;
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-/* Corner bracket decorations */
+/* Subtle corner bracket decorations */
 .corner-bracket {
   position: relative;
 }
@@ -80,33 +66,39 @@
   position: absolute;
   top: -1px;
   left: -1px;
-  width: 8px;
-  height: 8px;
-  border-top: 1px solid #FF1A1A;
-  border-left: 1px solid #FF1A1A;
+  width: 7px;
+  height: 7px;
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
+  border-left: 1px solid rgba(148, 163, 184, 0.35);
+  transition: border-color 0.2s ease;
 }
 .corner-bracket::after {
   content: '';
   position: absolute;
   bottom: -1px;
   right: -1px;
-  width: 8px;
-  height: 8px;
-  border-bottom: 1px solid #FF1A1A;
-  border-right: 1px solid #FF1A1A;
+  width: 7px;
+  height: 7px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+  border-right: 1px solid rgba(148, 163, 184, 0.35);
+  transition: border-color 0.2s ease;
+}
+.corner-bracket:hover::before,
+.corner-bracket:hover::after {
+  border-color: rgba(255, 43, 43, 0.6);
 }
 
-/* Range Red Glow */
+/* Soft Red Accents */
 .glow-red {
-  box-shadow: 0 0 25px rgba(255, 26, 26, 0.35);
+  box-shadow: 0 0 25px rgba(255, 43, 43, 0.25);
 }
 
 .glow-red-sm {
-  box-shadow: 0 0 10px rgba(255, 26, 26, 0.25);
+  box-shadow: 0 0 10px rgba(255, 43, 43, 0.18);
 }
 
 .text-glow-red {
-  text-shadow: 0 0 12px rgba(255, 26, 26, 0.7);
+  text-shadow: 0 0 12px rgba(255, 43, 43, 0.5);
 }
 
 /* Reduced motion preference */

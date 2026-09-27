@@ -1,8 +1,9 @@
-import React from 'react';
-import { Canvas } from '@react-three/fiber';
-import { TheRedCube } from '../3d/TheRedCube';
+import React, { useRef } from 'react';
 import { ArrowUpRight, Mail } from 'lucide-react';
-import { useGraphics } from '../../context/GraphicsContext';
+import { useGSAP, gsap } from '../../lib/gsap';
+import { BenchoTiltCard } from '../bencho/BenchoTiltCard';
+import { BenchoMagneticButton } from '../bencho/BenchoMagneticButton';
+import { BenchoCopyButton } from '../bencho/BenchoCopyButton';
 
 const GithubIcon = () => (
   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -17,8 +18,7 @@ const LinkedinIcon = () => (
 );
 
 export const ContactSection: React.FC = () => {
-  const { quality } = useGraphics();
-  const dpr = quality === 'HIGH' ? [1, 2] : quality === 'MED' ? [1, 1.5] : [1, 1];
+  const sectionRef = useRef<HTMLElement>(null);
 
   const LINKS = [
     {
@@ -41,94 +41,140 @@ export const ContactSection: React.FC = () => {
     }
   ];
 
+  useGSAP(() => {
+    gsap.fromTo(
+      '.contact-title',
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.9,
+        ease: 'power3.out',
+        clearProps: 'opacity,transform',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+        },
+      }
+    );
+
+    gsap.fromTo(
+      '.contact-link-card',
+      { opacity: 0, y: 25 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: 'power3.out',
+        clearProps: 'opacity,transform',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 75%',
+        },
+      }
+    );
+  }, { scope: sectionRef });
+
   return (
-    <section id="contact" className="w-full pt-28 pb-12 bg-[#030303] border-t border-[#181818] relative flex flex-col justify-between">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full">
-        
+    <section
+      ref={sectionRef}
+      id="contact"
+      className="w-full pt-28 pb-20 bg-transparent border-t border-slate-800/80 relative flex flex-col justify-between"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-20">
         {/* Top Header Label */}
-        <div className="font-mono text-xs text-[#FF1A1A] tracking-widest mb-4 flex items-center gap-2">
-          <span>[ SECTION 10 ]</span>
-          <span className="w-8 h-[1px] bg-[#FF1A1A]" />
-          <span>TERMINATION STAGE</span>
+        <div className="font-mono text-xs text-slate-400 tracking-widest mb-6 flex items-center gap-2">
+          <span className="text-slate-200 font-semibold">[ 07 ]</span>
+          <span className="w-6 h-[1px] bg-slate-700" />
+          <span>CONTACT &amp; CHANNELS</span>
         </div>
 
-        {/* Main Grid: Huge Typography + Small Returning Red Cube */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-20">
-          
-          {/* Huge Brutalist Typography */}
-          <div className="lg:col-span-8 select-none">
-            <h2 className="text-6xl sm:text-8xl md:text-9xl font-black font-display tracking-tighter text-[#F2F2F2] uppercase leading-[0.84]">
-              LET&apos;S<br />
-              <span className="text-[#FF1A1A]">BUILD</span><br />
+        {/* Big Typography Callout */}
+        <div className="contact-title mb-16 select-none flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div>
+            <h2 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black font-display tracking-tight text-[#F1F5F9] uppercase leading-[0.88]">
+              LET&apos;S <span className="text-[#FF2B2B]">BUILD</span><br />
               SOMETHING.
             </h2>
+            <p className="mt-6 text-slate-400 font-mono text-sm max-w-xl font-sans">
+              Open to creative technology projects, graphics development, and engineering roles.
+            </p>
           </div>
 
-          {/* Small 3D Red Cube Closing Scene */}
-          <div className="lg:col-span-4 h-64 sm:h-80 relative bg-[#070707] border border-[#222] corner-bracket flex flex-col items-center justify-center">
-            <div className="absolute top-2 left-3 font-mono text-[10px] text-[#666]">
-              STATUS: CUBE_REST_POSITION
+          {/* Bencho Direct Email Quick-Copy Card */}
+          <div className="p-4 bg-[#11141D]/90 backdrop-blur-md border border-slate-800 rounded-sm font-mono text-xs space-y-2.5 max-w-md">
+            <div className="text-slate-400 text-[11px] flex justify-between">
+              <span>DIRECT INBOX</span>
+              <span className="text-[#00FF88]">ONLINE</span>
             </div>
-            
-            <div className="w-full h-full">
-              <Canvas camera={{ position: [0, 0, 3.8], fov: 40 }} dpr={dpr as [number, number]}>
-                <ambientLight intensity={0.5} />
-                <directionalLight position={[3, 4, 3]} intensity={1.6} />
-                <pointLight position={[-2, -2, -2]} intensity={0.8} color="#FF1A1A" />
-                <TheRedCube size={1.4} rotationSpeed={0.5} mode="DEFAULT" />
-              </Canvas>
+            <div className="text-slate-200 font-bold select-all">
+              bernardoribeiro.dev@gmail.com
             </div>
-
-            <div className="absolute bottom-2 text-center font-mono text-[10px] text-[#555]">
-              DEFAULT_OBJECT // PERSISTENT RUNTIME
+            <div className="pt-1 flex items-center gap-2">
+              <BenchoCopyButton
+                textToCopy="bernardoribeiro.dev@gmail.com"
+                label="COPY EMAIL"
+                copiedLabel="COPIED TO CLIPBOARD!"
+              />
+              <BenchoMagneticButton
+                href="mailto:bernardoribeiro.dev@gmail.com"
+                strength={0.2}
+                className="px-3 py-1.5 bg-[#FF2B2B] hover:bg-[#ff4d4d] text-white font-semibold rounded-sm text-xs"
+              >
+                <span>SEND EMAIL</span>
+              </BenchoMagneticButton>
             </div>
           </div>
-
         </div>
 
         {/* Interactive Channel Links */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-24">
           {LINKS.map((link) => (
-            <a
+            <BenchoTiltCard
               key={link.label}
-              href={link.href}
-              target="_blank"
-              rel="noreferrer"
-              className="p-6 bg-[#080808] border border-[#1e1e1e] hover:border-[#FF1A1A] group transition-all duration-300 flex flex-col justify-between corner-bracket"
+              maxTilt={6}
+              className="h-full"
             >
-              <div>
-                <div className="flex items-center justify-between text-[#858585] group-hover:text-[#FF1A1A] transition-colors mb-3">
-                  <div className="flex items-center gap-2">
-                    {link.icon}
-                    <span className="font-mono text-xs tracking-wider">{link.label}</span>
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+                className="contact-link-card p-6 bg-[#11141D]/90 backdrop-blur-md border border-slate-800 rounded-sm hover:border-slate-600 group transition-all duration-300 flex flex-col justify-between h-full corner-bracket cursor-pointer shadow-lg"
+              >
+                <div>
+                  <div className="flex items-center justify-between text-slate-400 group-hover:text-white transition-colors mb-4">
+                    <div className="flex items-center gap-2">
+                      {link.icon}
+                      <span className="font-mono text-xs tracking-wider">{link.label}</span>
+                    </div>
+                    <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </div>
-                  <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  <div className="text-xl sm:text-2xl font-bold font-display text-slate-200 group-hover:text-[#FF2B2B] transition-colors">
+                    {link.label} →
+                  </div>
                 </div>
-                <div className="text-xl sm:text-2xl font-bold font-display text-white group-hover:text-[#FF1A1A] transition-colors">
-                  {link.label} →
+                <div className="font-mono text-xs text-slate-400 mt-6">
+                  {link.desc}
                 </div>
-              </div>
-              <div className="font-mono text-xs text-[#666] mt-4">
-                {link.desc}
-              </div>
-            </a>
+              </a>
+            </BenchoTiltCard>
           ))}
         </div>
 
         {/* Technical Footer */}
-        <footer className="pt-8 border-t border-[#181818] flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#666]">
+        <footer className="pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-slate-400">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-            <span className="text-[#F2F2F2] font-bold">BERNARDO RIBEIRO</span>
-            <span className="hidden sm:inline text-[#333]">|</span>
-            <span>GRAPHICS / 3D / SOFTWARE</span>
+            <span className="text-slate-200 font-semibold">BERNARDO RIBEIRO</span>
+            <span className="hidden sm:inline text-slate-700">|</span>
+            <span>COMPUTER GRAPHICS &amp; SOFTWARE</span>
           </div>
 
-          <div className="flex items-center gap-4 text-[11px]">
-            <span>© 2026 // ALL SYSTEMS NOMINAL</span>
-            <span className="inline-block w-2 h-2 rounded-full bg-[#00FF66]" />
+          <div className="flex items-center gap-3 text-[11px]">
+            <span>&copy; 2026 // ALL SYSTEMS NOMINAL</span>
+            <span className="inline-block w-2 h-2 rounded-full bg-[#00FF88]" />
           </div>
         </footer>
-
       </div>
     </section>
   );

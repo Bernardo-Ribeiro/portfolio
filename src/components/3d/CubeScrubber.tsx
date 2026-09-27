@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { TheRedCube } from './TheRedCube';
 import type { ShaderRenderMode } from '../../types/graphics';
 import { useGraphics } from '../../context/GraphicsContext';
+import { BenchoMagneticButton } from '../bencho/BenchoMagneticButton';
 
 export interface CubeStage {
   id: ShaderRenderMode;
@@ -104,20 +105,52 @@ export const CUBE_STAGES: CubeStage[] = [
     drawCalls: 1,
     memory: '6.2 KB',
     description: 'Hardware accelerated 3D Simplex noise algorithm deforming vertices along normal vectors in real time.'
+  },
+  {
+    id: 'ISO_LATTICE',
+    name: '09 // ISO LATTICE',
+    material: 'BOOK_OF_SHAPES_ISO',
+    pass: 'ISOMETRIC_LATTICE_RASTER',
+    triangles: 12,
+    vertices: 24,
+    drawCalls: 1,
+    memory: '3.4 KB',
+    description: 'Algorithmic isometric cube wireframe lattice texture inspired by Book of Shapes (iso-cube-wireframe).'
+  },
+  {
+    id: 'INTERFERENCE',
+    name: '10 // INTERFERENCE',
+    material: 'BOOK_OF_SHAPES_MOIRE',
+    pass: 'PHYSICAL_WAVE_HARMONIC',
+    triangles: 12,
+    vertices: 24,
+    drawCalls: 1,
+    memory: '3.8 KB',
+    description: 'Dual oscillating harmonic wave moiré interference pattern inspired by Book of Shapes (interference-mesh).'
   }
 ];
 
 export const CubeScrubber: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const { quality } = useGraphics();
+  const { quality, updateCompanionState } = useGraphics();
   const currentStage = CUBE_STAGES[activeIndex];
 
+  const handleSelectStage = (idx: number) => {
+    setActiveIndex(idx);
+    updateCompanionState({
+      mode: CUBE_STAGES[idx].id,
+      shape: 'cube',
+    });
+  };
+
   const handlePrev = () => {
-    setActiveIndex((prev) => (prev > 0 ? prev - 1 : CUBE_STAGES.length - 1));
+    const nextIdx = activeIndex > 0 ? activeIndex - 1 : CUBE_STAGES.length - 1;
+    handleSelectStage(nextIdx);
   };
 
   const handleNext = () => {
-    setActiveIndex((prev) => (prev < CUBE_STAGES.length - 1 ? prev + 1 : 0));
+    const nextIdx = activeIndex < CUBE_STAGES.length - 1 ? activeIndex + 1 : 0;
+    handleSelectStage(nextIdx);
   };
 
   const dpr = quality === 'HIGH' ? [1, 2] : quality === 'MED' ? [1, 1.5] : [1, 1];
@@ -125,27 +158,27 @@ export const CubeScrubber: React.FC = () => {
   return (
     <div className="w-full flex flex-col items-center">
       {/* 3D Viewport */}
-      <div className="w-full h-[480px] md:h-[580px] relative bg-[#040404] border border-[#222222] corner-bracket overflow-hidden flex items-center justify-center">
+      <div className="w-full h-[480px] md:h-[560px] relative bg-[#0D1017]/90 backdrop-blur-md border border-slate-800 rounded-sm corner-bracket overflow-hidden flex items-center justify-center">
         {/* HUD Top Readout */}
         <div className="absolute top-4 left-4 z-10 flex flex-col gap-1 font-mono text-xs">
-          <div className="flex items-center gap-2 text-[#FF1A1A]">
-            <span className="w-2 h-2 rounded-full bg-[#FF1A1A] animate-ping" />
+          <div className="flex items-center gap-2 text-[#FF2B2B]">
+            <span className="w-2 h-2 rounded-full bg-[#FF2B2B] animate-ping" />
             <span className="font-bold tracking-widest">{currentStage.name}</span>
           </div>
-          <div className="text-[#858585] text-[11px]">
-            MATERIAL: <span className="text-[#F2F2F2]">{currentStage.material}</span>
+          <div className="text-slate-400 text-[11px]">
+            MATERIAL: <span className="text-slate-200">{currentStage.material}</span>
           </div>
-          <div className="text-[#858585] text-[11px]">
-            PASS: <span className="text-[#F2F2F2]">{currentStage.pass}</span>
+          <div className="text-slate-400 text-[11px]">
+            PASS: <span className="text-slate-200">{currentStage.pass}</span>
           </div>
         </div>
 
         {/* HUD Top Right Diagnostics */}
-        <div className="absolute top-4 right-4 z-10 font-mono text-[11px] text-right text-[#858585] hidden sm:block">
-          <div>GEOMETRY: <span className="text-[#F2F2F2]">{currentStage.triangles} TRIS</span></div>
-          <div>VERTICES: <span className="text-[#F2F2F2]">{currentStage.vertices}</span></div>
-          <div>BUFFER: <span className="text-[#F2F2F2]">{currentStage.memory}</span></div>
-          <div>DRAWCALLS: <span className="text-[#F2F2F2]">{currentStage.drawCalls}</span></div>
+        <div className="absolute top-4 right-4 z-10 font-mono text-[11px] text-right text-slate-400 hidden sm:block">
+          <div>GEOMETRY: <span className="text-slate-200">{currentStage.triangles} TRIS</span></div>
+          <div>VERTICES: <span className="text-slate-200">{currentStage.vertices}</span></div>
+          <div>BUFFER: <span className="text-slate-200">{currentStage.memory}</span></div>
+          <div>DRAWCALLS: <span className="text-slate-200">{currentStage.drawCalls}</span></div>
         </div>
 
         {/* Real-Time 3D Canvas */}
@@ -156,7 +189,7 @@ export const CubeScrubber: React.FC = () => {
         >
           <ambientLight intensity={0.5} />
           <directionalLight position={[4, 6, 4]} intensity={1.8} />
-          <pointLight position={[-3, -2, -2]} intensity={1.0} color="#FF1A1A" />
+          <pointLight position={[-3, -2, -2]} intensity={1.0} color="#FF2B2B" />
           <pointLight position={[3, 2, 2]} intensity={0.8} color="#FFFFFF" />
 
           <group position={[0, 0, 0]}>
@@ -171,56 +204,59 @@ export const CubeScrubber: React.FC = () => {
         </Canvas>
 
         {/* Viewport Crosshair Center */}
-        <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-20">
-          <div className="w-12 h-[1px] bg-[#FF1A1A]" />
-          <div className="h-12 w-[1px] bg-[#FF1A1A] absolute" />
+        <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-10">
+          <div className="w-12 h-[1px] bg-white" />
+          <div className="h-12 w-[1px] bg-white absolute" />
         </div>
 
         {/* Bottom Technical Description */}
-        <div className="absolute bottom-4 left-4 right-4 z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-2 bg-[#050505]/80 backdrop-blur-sm p-3 border-t border-[#1a1a1a]">
-          <div className="text-xs font-mono text-[#858585] max-w-xl">
-            <span className="text-[#FF1A1A] mr-2">► DESC:</span>
+        <div className="absolute bottom-4 left-4 right-4 z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-2 bg-[#11141D]/90 backdrop-blur-md p-3.5 border border-slate-800 rounded-sm">
+          <div className="text-xs font-mono text-slate-400 max-w-xl">
+            <span className="text-[#FF2B2B] mr-2">► DESC:</span>
             {currentStage.description}
           </div>
           <div className="flex items-center gap-2 self-end">
-            <button
+            <BenchoMagneticButton
               onClick={handlePrev}
-              className="px-3 py-1 text-xs font-mono border border-[#333] hover:border-[#FF1A1A] hover:text-[#FF1A1A] bg-[#0c0c0c] transition-colors"
+              strength={0.2}
+              className="px-3 py-1 text-xs font-mono border border-slate-700 hover:border-slate-500 hover:text-white bg-slate-900 transition-colors rounded-sm cursor-pointer"
             >
               [◄ PREV]
-            </button>
-            <span className="text-xs font-mono text-[#FF1A1A]">
+            </BenchoMagneticButton>
+            <span className="text-xs font-mono text-[#FF2B2B] px-1 font-semibold">
               {String(activeIndex + 1).padStart(2, '0')} / {String(CUBE_STAGES.length).padStart(2, '0')}
             </span>
-            <button
+            <BenchoMagneticButton
               onClick={handleNext}
-              className="px-3 py-1 text-xs font-mono border border-[#333] hover:border-[#FF1A1A] hover:text-[#FF1A1A] bg-[#0c0c0c] transition-colors"
+              strength={0.2}
+              className="px-3 py-1 text-xs font-mono border border-slate-700 hover:border-slate-500 hover:text-white bg-slate-900 transition-colors rounded-sm cursor-pointer"
             >
               [NEXT ►]
-            </button>
+            </BenchoMagneticButton>
           </div>
         </div>
       </div>
 
       {/* Scrubber Pipeline Stage Buttons */}
-      <div className="w-full grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 mt-4">
+      <div className="w-full grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5 mt-4">
         {CUBE_STAGES.map((stage, idx) => {
           const isActive = idx === activeIndex;
           return (
             <button
               key={stage.id}
-              onClick={() => setActiveIndex(idx)}
-              className={`p-2 text-left font-mono text-xs border transition-all cursor-pointer ${
+              onClick={() => handleSelectStage(idx)}
+              type="button"
+              className={`p-3 text-left font-mono text-xs border rounded-sm transition-all cursor-pointer ${
                 isActive
-                  ? 'border-[#FF1A1A] bg-[#FF1A1A]/10 text-white font-bold'
-                  : 'border-[#1a1a1a] bg-[#080808] text-[#858585] hover:border-[#444] hover:text-[#bbb]'
+                  ? 'border-[#FF2B2B] bg-[#FF2B2B]/15 text-white font-semibold shadow-[0_0_12px_rgba(255,43,43,0.2)]'
+                  : 'border-slate-800 bg-[#11141D] text-slate-400 hover:border-slate-700 hover:text-slate-200'
               }`}
             >
-              <div className="text-[10px] text-[#666] flex justify-between">
+              <div className="text-[10px] text-slate-400 flex justify-between items-center">
                 <span>STAGE 0{idx + 1}</span>
-                {isActive && <span className="text-[#FF1A1A]">●</span>}
+                {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[#FF2B2B] animate-pulse" />}
               </div>
-              <div className="text-[11px] truncate mt-1">
+              <div className="text-[11px] truncate mt-1.5 font-semibold">
                 {stage.id}
               </div>
             </button>

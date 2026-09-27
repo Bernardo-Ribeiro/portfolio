@@ -30,8 +30,10 @@ const BackgroundDust: React.FC<{ count?: number }> = ({ count = 250 }) => {
 
   useFrame((_, delta) => {
     if (!pointsRef.current || reduceMotion || !particles) return;
-    pointsRef.current.rotation.y += delta * 0.02;
-    pointsRef.current.rotation.x += delta * 0.01;
+    if (typeof document !== 'undefined' && document.hidden) return;
+    const safeDelta = Math.min(delta, 0.05);
+    pointsRef.current.rotation.y = (pointsRef.current.rotation.y + safeDelta * 0.02) % (Math.PI * 2);
+    pointsRef.current.rotation.x = (pointsRef.current.rotation.x + safeDelta * 0.01) % (Math.PI * 2);
   });
 
   if (!particles) return null;

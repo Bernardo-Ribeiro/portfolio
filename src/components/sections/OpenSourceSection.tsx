@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { TERMINAL_REPOS } from '../../data/projects';
 import { Terminal, ExternalLink, CornerDownLeft } from 'lucide-react';
+import { useGSAP, gsap } from '../../lib/gsap';
 
 interface CommandOutput {
   id: number;
@@ -16,7 +17,7 @@ export const OpenSourceSection: React.FC = () => {
       id: 1,
       command: 'ls projects/',
       output: (
-        <div className="text-[#858585] text-xs">
+        <div className="text-slate-400 text-xs">
           Loaded 8 active repositories from github.com/Bernardo-Ribeiro. Hover or click to inspect.
         </div>
       )
@@ -24,6 +25,20 @@ export const OpenSourceSection: React.FC = () => {
   ]);
 
   const terminalEndRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    gsap.from('.terminal-window', {
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 80%',
+      },
+      opacity: 0,
+      y: 35,
+      duration: 0.8,
+      ease: 'power3.out',
+    });
+  }, { scope: sectionRef });
 
   const handleCommand = (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,37 +110,41 @@ export const OpenSourceSection: React.FC = () => {
   }, [history]);
 
   return (
-    <section id="terminal" className="w-full py-28 bg-[#040404] border-t border-[#181818] relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        
+    <section
+      ref={sectionRef}
+      id="terminal"
+      className="w-full py-28 bg-transparent border-t border-slate-800/80 relative"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-20">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 border-b border-[#1c1c1c] pb-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 border-b border-slate-800/80 pb-8">
           <div>
-            <div className="font-mono text-xs text-[#FF1A1A] tracking-widest mb-3 flex items-center gap-2">
-              <Terminal className="w-3.5 h-3.5 text-[#FF1A1A]" />
-              <span>[ SECTION 09 ] // CLI WORKSPACE</span>
+            <div className="font-mono text-xs text-slate-400 tracking-widest mb-3 flex items-center gap-2">
+              <Terminal className="w-3.5 h-3.5 text-[#FF2B2B]" />
+              <span className="text-slate-200 font-semibold">[ 07 ]</span>
+              <span className="w-6 h-[1px] bg-slate-700" />
+              <span>CLI WORKSPACE</span>
             </div>
-            <h2 className="text-5xl sm:text-7xl font-black font-display tracking-tight text-[#F2F2F2] uppercase">
+            <h2 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-[#F1F5F9] uppercase">
               OPEN SOURCE
             </h2>
           </div>
-          <div className="font-mono text-xs text-[#858585] max-w-sm">
+          <div className="font-mono text-xs text-slate-400 max-w-sm">
             Terminal interface into public repositories. Hover over files to inspect details or run bash commands.
           </div>
         </div>
 
         {/* Terminal Window Box */}
-        <div className="w-full bg-[#080808] border border-[#222] corner-bracket shadow-2xl overflow-hidden font-mono text-xs">
-          
+        <div className="terminal-window w-full bg-[#0D1017]/95 backdrop-blur-md border border-slate-800 rounded-sm corner-bracket shadow-2xl overflow-hidden font-mono text-xs">
           {/* Terminal Titlebar */}
-          <div className="px-4 py-2.5 bg-[#0e0e0e] border-b border-[#1c1c1c] flex items-center justify-between">
+          <div className="px-4 py-2.5 bg-[#131620] border-b border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#FF1A1A]" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#444]" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#222]" />
-              <span className="ml-2 text-[#888] text-[11px]">bernardo@range-lab: ~/projects</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[#FF2B2B]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-slate-600" />
+              <span className="w-2.5 h-2.5 rounded-full bg-slate-800" />
+              <span className="ml-2 text-slate-400 text-[11px]">bernardo@range-lab: ~/projects</span>
             </div>
-            <div className="text-[10px] text-[#555]">
+            <div className="text-[10px] text-slate-500">
               BASH 5.2 // VT100
             </div>
           </div>

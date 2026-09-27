@@ -218,3 +218,111 @@ export const GlitchShaderMaterial = {
     }
   `
 };
+
+// 5. Book of Shapes: Isometric Wireframe Lattice Shader Material
+export const IsoLatticeShaderMaterial = {
+  uniforms: {
+    uTime: { value: 0 },
+    uColor: { value: new THREE.Color('#FF2B2B') },
+    uBgColor: { value: new THREE.Color('#0A0C12') },
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    varying vec3 vNormal;
+    varying vec3 vPosition;
+    void main() {
+      vUv = uv;
+      vNormal = normalize(normalMatrix * normal);
+      vPosition = position;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform float uTime;
+    uniform vec3 uColor;
+    uniform vec3 uBgColor;
+    varying vec2 vUv;
+    varying vec3 vNormal;
+    varying vec3 vPosition;
+
+    void main() {
+      // Book of Shapes: Isometric cube wireframe lattice
+      vec2 p = vUv * 16.0;
+      vec2 isoCoord = vec2(p.x * 1.7320508 - p.y, p.y * 2.0);
+      vec2 grid1 = abs(fract(isoCoord) - 0.5);
+      vec2 grid2 = abs(fract(p) - 0.5);
+      float line1 = min(grid1.x, grid1.y);
+      float line2 = min(grid2.x, grid2.y);
+      float lines = min(line1, line2);
+
+      float wire = 1.0 - smoothstep(0.0, 0.08, lines);
+
+      // 3D diffuse lighting
+      vec3 lightDir = normalize(vec3(1.0, 1.5, 2.0));
+      float diff = max(dot(vNormal, lightDir), 0.0) * 0.6 + 0.4;
+
+      // Pulse wave along grid
+      float pulse = sin(p.x * 2.0 + p.y * 2.0 - uTime * 3.5) * 0.5 + 0.5;
+      vec3 activeLineColor = mix(uColor, vec3(1.0, 0.8, 0.8), pulse * 0.5);
+
+      vec3 finalColor = mix(uBgColor * diff, activeLineColor, wire);
+      gl_FragColor = vec4(finalColor, 1.0);
+    }
+  `
+};
+
+// 6. Book of Shapes: Wave Interference Mesh Shader Material
+export const InterferenceMeshShaderMaterial = {
+  uniforms: {
+    uTime: { value: 0 },
+    uColor: { value: new THREE.Color('#FF2B2B') },
+    uBgColor: { value: new THREE.Color('#080A10') },
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    varying vec3 vNormal;
+    varying vec3 vPosition;
+    void main() {
+      vUv = uv;
+      vNormal = normalize(normalMatrix * normal);
+      vPosition = position;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform float uTime;
+    uniform vec3 uColor;
+    uniform vec3 uBgColor;
+    varying vec2 vUv;
+    varying vec3 vNormal;
+    varying vec3 vPosition;
+
+    void main() {
+      // Book of Shapes: Physics wave interference moire mesh
+      vec2 p = vUv * 18.0 - 9.0;
+      vec2 c1 = vec2(sin(uTime * 0.5) * 2.2, cos(uTime * 0.35) * 2.2);
+      vec2 c2 = vec2(cos(uTime * 0.45) * -2.2, sin(uTime * 0.55) * -2.2);
+
+      float d1 = length(p - c1);
+      float d2 = length(p - c2);
+
+      float w1 = sin(d1 * 3.5 - uTime * 2.5);
+      float w2 = sin(d2 * 3.5 + uTime * 2.0);
+      float interference = (w1 + w2) * 0.5;
+
+      // Stepped contour lines (Moiré fringes)
+      float bands = smoothstep(0.06, 0.14, abs(fract(interference * 2.0) - 0.5));
+      float gridDot = smoothstep(0.12, 0.05, length(fract(p) - 0.5));
+
+      vec3 base = mix(uBgColor, vec3(0.1, 0.02, 0.02), abs(interference));
+      vec3 finalColor = mix(base, uColor, (1.0 - bands) * 0.85 + gridDot * 0.35);
+
+      // Subtle edge fresnel highlight
+      float rim = 1.0 - max(dot(vNormal, vec3(0.0, 0.0, 1.0)), 0.0);
+      finalColor += uColor * pow(rim, 2.5) * 0.4;
+
+      gl_FragColor = vec4(finalColor, 1.0);
+    }
+  `
+};
+

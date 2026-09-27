@@ -1,80 +1,192 @@
-import React from 'react';
-import { HeroCanvas } from '../3d/HeroCanvas';
-import { useGraphics } from '../../context/GraphicsContext';
-import { ArrowDown } from 'lucide-react';
+import React, { useRef } from 'react';
+import { ArrowDown, Layers, FlaskConical, Mail, Command, Sparkles } from 'lucide-react';
+import { useGSAP, gsap } from '../../lib/gsap';
+import { BenchoMagneticButton } from '../bencho/BenchoMagneticButton';
 
-export const HeroSection: React.FC = () => {
-  const { fps, triangles } = useGraphics();
+interface HeroSectionProps {
+  onOpenCommandBar?: () => void;
+}
+
+export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenCommandBar }) => {
+  const containerRef = useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+    tl.from('.hero-status', {
+      opacity: 0,
+      y: -15,
+      duration: 0.8,
+    })
+      .from(
+        '.hero-badge',
+        {
+          opacity: 0,
+          scale: 0.95,
+          duration: 0.6,
+        },
+        '-=0.4'
+      )
+      .from(
+        '.hero-title-line',
+        {
+          opacity: 0,
+          y: 40,
+          duration: 1.0,
+          stagger: 0.12,
+        },
+        '-=0.3'
+      )
+      .from(
+        '.hero-tag',
+        {
+          opacity: 0,
+          y: 15,
+          duration: 0.6,
+          stagger: 0.06,
+        },
+        '-=0.4'
+      )
+      .from(
+        '.hero-actions',
+        {
+          opacity: 0,
+          y: 20,
+          duration: 0.7,
+        },
+        '-=0.3'
+      )
+      .from(
+        '.hero-bottom',
+        {
+          opacity: 0,
+          y: 15,
+          duration: 0.7,
+        },
+        '-=0.3'
+      );
+  }, { scope: containerRef });
 
   return (
-    <section id="hero" className="relative w-full h-screen min-h-[640px] flex items-center justify-between overflow-hidden bg-[#050505] tech-grid">
-      {/* Real-time 3D Scene with the Red Cube */}
-      <HeroCanvas />
-
+    <section
+      ref={containerRef}
+      id="hero"
+      className="relative w-full h-screen min-h-[680px] flex items-center justify-between overflow-hidden bg-transparent tech-grid"
+    >
       {/* Hero Foreground Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 pointer-events-none flex flex-col justify-between h-full pt-20 pb-10">
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col justify-between h-full pt-24 pb-12 pointer-events-none">
         
         {/* Top Technical Status Ribbon */}
-        <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-[#858585] border-b border-[#1c1c1c] pb-3">
-          <div className="flex items-center gap-3">
-            <span className="inline-block w-2 h-2 rounded-full bg-[#FF1A1A] animate-pulse" />
-            <span className="text-white font-bold">RANGE_ENVIRONMENT // ONLINE</span>
+        <div className="hero-status pointer-events-auto flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-slate-400 border-b border-slate-800/80 pb-3">
+          <div className="flex items-center gap-2.5">
+            <span className="inline-block w-2 h-2 rounded-full bg-[#00FF88] animate-pulse" />
+            <span className="text-slate-200 font-semibold tracking-wider">
+              ONLINE // AVAILABLE FOR PROJECTS
+            </span>
           </div>
-          <div className="flex items-center gap-4 text-[11px]">
-            <span>FPS: <strong className="text-white">{fps}</strong></span>
-            <span>TRIS: <strong className="text-white">{triangles}</strong></span>
-            <span>API: <strong className="text-[#FF1A1A]">WEBGL2 / VGPU</strong></span>
-            <span className="hidden sm:inline">SCENE: <strong className="text-white">RANGE_DEFAULT_00</strong></span>
+          <div className="flex items-center gap-4 text-[11px] text-slate-400">
+            <span>LOCATION: <strong className="text-slate-200 font-normal">BRAZIL</strong></span>
+            <span className="hidden sm:inline">STACK: <strong className="text-slate-200 font-normal">WEBGL / SHADERS / PYTHON</strong></span>
           </div>
         </div>
 
         {/* Central Typographic Hero */}
-        <div className="my-auto py-8">
-          <div className="inline-block px-2.5 py-1 mb-4 bg-[#FF1A1A]/10 border border-[#FF1A1A]/40 text-[#FF1A1A] font-mono text-[11px] tracking-wider pointer-events-auto">
-            [ CREATIVE DEVELOPER &amp; GRAPHICS PROGRAMMER ]
+        <div className="my-auto py-6">
+          <div className="hero-badge inline-flex items-center gap-2 px-3 py-1 mb-5 bg-white/[0.04] border border-white/[0.1] text-slate-300 font-mono text-xs tracking-wider rounded-sm pointer-events-auto">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FF2B2B]" />
+            <span>CREATIVE DEVELOPER &amp; GRAPHICS PROGRAMMER</span>
           </div>
-          
-          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black font-display tracking-tighter text-[#F2F2F2] uppercase leading-[0.88] select-none">
-            BERNARDO<br />
-            <span className="text-transparent" style={{ WebkitTextStroke: '1.5px #F2F2F2' }}>RIBEIRO</span>
+
+          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black font-display tracking-tight text-[#F1F5F9] uppercase leading-[0.88] select-none">
+            <span className="hero-title-line block">BERNARDO</span>
+            <span
+              className="hero-title-line block text-transparent"
+              style={{ WebkitTextStroke: '1.5px rgba(241, 245, 249, 0.85)' }}
+            >
+              RIBEIRO
+            </span>
           </h1>
 
-          <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-3 font-mono text-xs sm:text-sm text-[#858585]">
-            <span className="text-[#FF1A1A] font-bold">► FOCUS:</span>
-            <span>COMPUTER GRAPHICS</span>
-            <span className="text-[#444] hidden sm:inline">/</span>
-            <span>3D &amp; GLSL SHADERS</span>
-            <span className="text-[#444] hidden sm:inline">/</span>
-            <span>RANGE ENGINE</span>
-            <span className="text-[#444] hidden sm:inline">/</span>
-            <span>SOFTWARE ENGINEERING</span>
+          {/* Clean Focus Badges */}
+          <div className="mt-8 flex flex-wrap items-center gap-2 font-mono text-xs text-slate-400 pointer-events-auto">
+            <span className="text-slate-400 mr-1 flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-[#FF2B2B]" />
+              <span>FOCUS:</span>
+            </span>
+            {[
+              'Computer Graphics',
+              '3D & GLSL Shaders',
+              'Range Engine',
+              'Software Engineering',
+            ].map((tag) => (
+              <span
+                key={tag}
+                className="hero-tag px-2.5 py-1 bg-white/[0.03] border border-slate-800 text-slate-300 rounded-sm hover:border-[#FF2B2B] hover:text-white transition-all cursor-default"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {/* Bencho Interactive Action Buttons (High Prominence) */}
+          <div className="hero-actions mt-8 flex flex-wrap items-center gap-3 pointer-events-auto font-mono text-xs">
+            <BenchoMagneticButton
+              href="#work"
+              strength={0.3}
+              className="px-5 py-2.5 bg-[#FF2B2B] hover:bg-[#ff4d4d] text-white font-semibold rounded-sm shadow-[0_0_20px_rgba(255,43,43,0.35)]"
+            >
+              <Layers className="w-4 h-4" />
+              <span>EXPLORE WORK</span>
+            </BenchoMagneticButton>
+
+            <BenchoMagneticButton
+              href="#lab"
+              strength={0.3}
+              className="px-4 py-2.5 bg-[#11141D] hover:bg-slate-800 text-slate-200 border border-slate-700 hover:border-slate-500 rounded-sm"
+            >
+              <FlaskConical className="w-4 h-4 text-[#FF2B2B]" />
+              <span>REAL-TIME LAB</span>
+            </BenchoMagneticButton>
+
+            <BenchoMagneticButton
+              href="#contact"
+              strength={0.3}
+              className="px-4 py-2.5 bg-[#11141D] hover:bg-slate-800 text-slate-200 border border-slate-700 hover:border-slate-500 rounded-sm"
+            >
+              <Mail className="w-4 h-4 text-slate-400" />
+              <span>GET IN TOUCH</span>
+            </BenchoMagneticButton>
+
+            {onOpenCommandBar && (
+              <BenchoMagneticButton
+                onClick={onOpenCommandBar}
+                strength={0.25}
+                className="px-3.5 py-2.5 bg-white/[0.03] hover:bg-white/[0.08] text-slate-300 border border-slate-800 rounded-sm hidden sm:inline-flex"
+              >
+                <Command className="w-3.5 h-3.5 text-[#00FF88]" />
+                <span>⌘K COMMANDS</span>
+              </BenchoMagneticButton>
+            )}
           </div>
         </div>
 
         {/* Bottom Bar: Concept & Scroll Indicator */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 pt-4 border-t border-[#1c1c1c] font-mono text-xs text-[#858585]">
+        <div className="hero-bottom pointer-events-auto flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 pt-4 border-t border-slate-800/80 font-mono text-xs text-slate-400">
           <div className="max-w-md">
-            <p className="text-[11px] text-[#aaa] leading-relaxed">
-              &ldquo;BUILDING DIGITAL EXPERIENCES THROUGH CODE, GRAPHICS AND 3D.&rdquo;
+            <p className="text-xs text-slate-400 leading-relaxed font-sans">
+              &ldquo;Building digital experiences through code, real-time shaders and 3D graphics.&rdquo;
             </p>
-            <div className="text-[10px] text-[#555] mt-1">
-              REAL-TIME RENDERING ENVIRONMENT // EST. 2026
-            </div>
           </div>
 
           <a
             href="#build"
-            className="pointer-events-auto flex items-center gap-2 text-xs font-mono text-[#F2F2F2] hover:text-[#FF1A1A] transition-colors py-1 group"
+            className="flex items-center gap-2 text-xs font-mono text-slate-300 hover:text-white transition-colors py-1 group cursor-pointer"
           >
             <span className="tracking-widest">SCROLL TO EXPLORE</span>
-            <ArrowDown className="w-4 h-4 text-[#FF1A1A] group-hover:translate-y-1 transition-transform" />
+            <ArrowDown className="w-4 h-4 text-[#FF2B2B] group-hover:translate-y-1 transition-transform" />
           </a>
         </div>
       </div>
-
-      {/* Decorative Technical Reticles in Corners */}
-      <div className="absolute bottom-6 left-6 w-3 h-3 border-b border-l border-[#FF1A1A] pointer-events-none" />
-      <div className="absolute top-24 right-6 w-3 h-3 border-t border-r border-[#FF1A1A] pointer-events-none" />
     </section>
   );
 };

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
-import type { GraphicsContextState, RangeEngineSettings, LabSettings, QualityLevel } from '../types/graphics';
+import type { GraphicsContextState, RangeEngineSettings, LabSettings, QualityLevel, CompanionState } from '../types/graphics';
 
 const DEFAULT_RANGE_SETTINGS: RangeEngineSettings = {
   shaderMode: 'DEFAULT',
@@ -18,12 +18,21 @@ const DEFAULT_LAB_SETTINGS: LabSettings = {
   noiseSpeed: 0.6,
   noiseScale: 2.5,
   intensity: 1.0,
-  scanlines: true,
+  scanlines: false,
   chromaticAberration: 0.35,
   vignette: 0.4,
   lightIntensity: 1.2,
   lightAngle: 45,
   topology: 'SOLID',
+};
+
+const DEFAULT_COMPANION_STATE: CompanionState = {
+  shape: 'cube',
+  position: [1.3, 0, 0],
+  scale: 1,
+  rotationSpeed: 0.8,
+  mode: 'DEFAULT',
+  wireframe: false,
 };
 
 const GraphicsContext = createContext<GraphicsContextState | undefined>(undefined);
@@ -37,12 +46,13 @@ export const GraphicsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   });
 
   const [particles, setParticles] = useState<boolean>(true);
-  const [postFx, setPostFx] = useState<boolean>(true);
+  const [postFx, setPostFx] = useState<boolean>(false);
   const [quality, setQuality] = useState<QualityLevel>('HIGH');
   const [currentSection, setCurrentSection] = useState<string>('hero');
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
+  const [companionState, setCompanionState] = useState(DEFAULT_COMPANION_STATE);
   const [rangeSettings, setRangeSettings] = useState<RangeEngineSettings>(DEFAULT_RANGE_SETTINGS);
   const [labSettings, setLabSettings] = useState<LabSettings>(DEFAULT_LAB_SETTINGS);
 
@@ -97,6 +107,10 @@ export const GraphicsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setLabSettings((prev) => ({ ...prev, ...partial }));
   };
 
+  const updateCompanionState = (partial: Partial<CompanionState>) => {
+    setCompanionState((prev) => ({ ...prev, ...partial }));
+  };
+
   return (
     <GraphicsContext.Provider
       value={{
@@ -115,6 +129,8 @@ export const GraphicsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setCurrentSection,
         scrollProgress,
         setScrollProgress,
+        companionState,
+        updateCompanionState,
         rangeSettings,
         updateRangeSettings,
         resetRangeSettings,

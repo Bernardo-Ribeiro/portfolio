@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { RangeScene } from '../3d/RangeScene';
 import { useGraphics } from '../../context/GraphicsContext';
 import type { ShaderRenderMode } from '../../types/graphics';
 import { RotateCcw, Box, Sun, Layers } from 'lucide-react';
+import { useGSAP, gsap } from '../../lib/gsap';
+import { IsoWireframePattern } from '../textures/BookOfShapesTextures';
 
 const SHADER_OPTIONS: { id: ShaderRenderMode; label: string }[] = [
   { id: 'DEFAULT', label: 'DEFAULT (PBR)' },
@@ -10,34 +12,65 @@ const SHADER_OPTIONS: { id: ShaderRenderMode; label: string }[] = [
   { id: 'TOON', label: 'TOON / CEL' },
   { id: 'FRESNEL', label: 'FRESNEL RIM' },
   { id: 'GLITCH', label: 'GLITCH' },
-  { id: 'DISSOLVE', label: 'DISSOLVE (POINTS)' },
+  { id: 'DISSOLVE', label: 'DISSOLVE' },
   { id: 'CUSTOM', label: 'CUSTOM GLSL' },
+  { id: 'ISO_LATTICE', label: 'ISO LATTICE (SHAPES)' },
+  { id: 'INTERFERENCE', label: 'INTERFERENCE (MOIRÉ)' },
 ];
 
 export const RangeEngineSection: React.FC = () => {
-  const { rangeSettings, updateRangeSettings, resetRangeSettings } = useGraphics();
+  const { rangeSettings, updateRangeSettings, resetRangeSettings, updateCompanionState } = useGraphics();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    gsap.fromTo(
+      '.range-heading',
+      { opacity: 0, y: 25 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: 'power3.out',
+        clearProps: 'all',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+          once: true,
+        },
+      }
+    );
+  }, { scope: sectionRef });
+
+  const handleShaderChange = (mode: ShaderRenderMode) => {
+    updateRangeSettings({ shaderMode: mode });
+    updateCompanionState({ mode });
+  };
 
   return (
-    <section id="range" className="w-full py-24 bg-[#050505] border-t border-[#1c1c1c] relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        
+    <section
+      ref={sectionRef}
+      id="range"
+      className="w-full py-24 bg-transparent border-t border-slate-800/80 relative overflow-hidden"
+    >
+      <IsoWireframePattern opacity={0.04} strokeColor="#94A3B8" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-20">
         {/* Section Heading */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-[#1c1c1c] pb-6">
+        <div className="range-heading flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-slate-800/80 pb-6">
           <div>
-            <div className="font-mono text-xs text-[#FF1A1A] tracking-widest mb-2 flex items-center gap-2">
-              <span>[ SECTION 03 ]</span>
-              <span className="w-8 h-[1px] bg-[#FF1A1A]" />
+            <div className="font-mono text-xs text-slate-400 tracking-widest mb-2 flex items-center gap-2">
+              <span className="text-slate-200 font-semibold">[ 04 ]</span>
+              <span className="w-6 h-[1px] bg-slate-700" />
               <span>CORE ARCHITECTURE</span>
             </div>
-            <h2 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-[#F2F2F2] uppercase">
+            <h2 className="text-4xl sm:text-6xl font-black font-display tracking-tight text-[#F1F5F9] uppercase">
               RANGE ENGINE
             </h2>
           </div>
-          <div className="max-w-md font-mono text-xs sm:text-sm text-[#858585]">
-            <p className="text-[#F2F2F2] leading-relaxed">
+          <div className="max-w-md font-mono text-xs sm:text-sm text-slate-400">
+            <p className="text-slate-300 leading-relaxed font-sans">
               &ldquo;Exploring real-time graphics, shaders, tools and interactive systems.&rdquo;
             </p>
-            <p className="text-[11px] text-[#666] mt-1">
+            <p className="text-[11px] text-slate-400 mt-1 font-mono">
               Active viewport simulated from Range Engine scene graph and material pipeline.
             </p>
           </div>
@@ -45,24 +78,23 @@ export const RangeEngineSection: React.FC = () => {
 
         {/* Interactive Workspace Grid: 3D Viewport + Settings Panel */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          
           {/* Main 3D Viewport (8 Cols) */}
           <div className="lg:col-span-8 flex flex-col h-[520px] lg:h-[620px]">
             <RangeScene />
           </div>
 
           {/* Settings Inspector Panel (4 Cols) */}
-          <div className="lg:col-span-4 bg-[#080808] border border-[#222222] corner-bracket p-5 font-mono text-xs flex flex-col justify-between">
+          <div className="lg:col-span-4 bg-[#11141D]/90 backdrop-blur-md border border-slate-800 rounded-sm p-5 font-mono text-xs flex flex-col justify-between corner-bracket">
             <div>
               {/* Header */}
-              <div className="flex items-center justify-between pb-3 border-b border-[#1c1c1c] mb-4">
-                <div className="flex items-center gap-2 text-white font-bold">
-                  <Box className="w-4 h-4 text-[#FF1A1A]" />
+              <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+                <div className="flex items-center gap-2 text-slate-200 font-semibold">
+                  <Box className="w-4 h-4 text-[#FF2B2B]" />
                   <span>SCENE // CUBE_INSPECTOR</span>
                 </div>
                 <button
                   onClick={resetRangeSettings}
-                  className="flex items-center gap-1 text-[10px] text-[#888] hover:text-[#FF1A1A] transition-colors cursor-pointer"
+                  className="flex items-center gap-1 text-[10px] text-slate-400 hover:text-white transition-colors cursor-pointer"
                   title="Reset to defaults"
                 >
                   <RotateCcw className="w-3 h-3" />
@@ -72,8 +104,8 @@ export const RangeEngineSection: React.FC = () => {
 
               {/* Shaders Selection */}
               <div className="mb-5">
-                <div className="text-[#858585] text-[11px] mb-2 flex items-center gap-1.5">
-                  <Layers className="w-3 h-3 text-[#FF1A1A]" />
+                <div className="text-slate-400 text-[11px] mb-2 flex items-center gap-1.5">
+                  <Layers className="w-3 h-3 text-[#FF2B2B]" />
                   <span>SHADER PIPELINE</span>
                 </div>
                 <div className="grid grid-cols-1 gap-1">
@@ -82,18 +114,22 @@ export const RangeEngineSection: React.FC = () => {
                     return (
                       <button
                         key={opt.id}
-                        onClick={() => updateRangeSettings({ shaderMode: opt.id })}
-                        className={`w-full text-left px-2.5 py-1.5 border transition-all flex items-center justify-between cursor-pointer ${
+                        onClick={() => handleShaderChange(opt.id)}
+                        className={`w-full text-left px-3 py-2 border rounded-sm transition-all flex items-center justify-between cursor-pointer ${
                           isSelected
-                            ? 'border-[#FF1A1A] bg-[#FF1A1A]/10 text-white font-bold'
-                            : 'border-[#1a1a1a] bg-[#0c0c0c] text-[#858585] hover:border-[#333] hover:text-[#ddd]'
+                            ? 'border-[#FF2B2B] bg-[#FF2B2B]/10 text-white font-semibold'
+                            : 'border-slate-800/80 bg-[#161A26] text-slate-400 hover:border-slate-700 hover:text-slate-200'
                         }`}
                       >
                         <span className="flex items-center gap-2">
-                          <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-[#FF1A1A]' : 'bg-[#333]'}`} />
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              isSelected ? 'bg-[#FF2B2B]' : 'bg-slate-700'
+                            }`}
+                          />
                           {opt.label}
                         </span>
-                        {isSelected && <span className="text-[10px] text-[#FF1A1A]">ACTIVE</span>}
+                        {isSelected && <span className="text-[10px] text-[#FF2B2B]">ACTIVE</span>}
                       </button>
                     );
                   })}
@@ -102,16 +138,16 @@ export const RangeEngineSection: React.FC = () => {
 
               {/* Lighting & PBR Sliders */}
               <div className="space-y-3.5 mb-4">
-                <div className="text-[#858585] text-[11px] flex items-center gap-1.5">
-                  <Sun className="w-3 h-3 text-[#FF1A1A]" />
+                <div className="text-slate-400 text-[11px] flex items-center gap-1.5">
+                  <Sun className="w-3 h-3 text-[#FF2B2B]" />
                   <span>LIGHTING &amp; MATERIAL PARAMETERS</span>
                 </div>
 
                 {/* Ambient Light */}
                 <div>
-                  <div className="flex justify-between text-[11px] text-[#aaa] mb-1">
+                  <div className="flex justify-between text-[11px] text-slate-300 mb-1">
                     <span>AMBIENT</span>
-                    <span className="text-[#FF1A1A]">{rangeSettings.ambient.toFixed(2)}</span>
+                    <span className="text-[#FF2B2B]">{rangeSettings.ambient.toFixed(2)}</span>
                   </div>
                   <input
                     type="range"
@@ -120,15 +156,15 @@ export const RangeEngineSection: React.FC = () => {
                     step="0.05"
                     value={rangeSettings.ambient}
                     onChange={(e) => updateRangeSettings({ ambient: parseFloat(e.target.value) })}
-                    className="w-full accent-[#FF1A1A] bg-[#1a1a1a] h-1.5 rounded cursor-pointer"
+                    className="w-full accent-[#FF2B2B] bg-slate-800 h-1.5 rounded cursor-pointer"
                   />
                 </div>
 
                 {/* Exposure */}
                 <div>
-                  <div className="flex justify-between text-[11px] text-[#aaa] mb-1">
+                  <div className="flex justify-between text-[11px] text-slate-300 mb-1">
                     <span>EXPOSURE</span>
-                    <span className="text-[#FF1A1A]">{rangeSettings.exposure.toFixed(2)}</span>
+                    <span className="text-[#FF2B2B]">{rangeSettings.exposure.toFixed(2)}</span>
                   </div>
                   <input
                     type="range"
@@ -137,15 +173,15 @@ export const RangeEngineSection: React.FC = () => {
                     step="0.1"
                     value={rangeSettings.exposure}
                     onChange={(e) => updateRangeSettings({ exposure: parseFloat(e.target.value) })}
-                    className="w-full accent-[#FF1A1A] bg-[#1a1a1a] h-1.5 rounded cursor-pointer"
+                    className="w-full accent-[#FF2B2B] bg-slate-800 h-1.5 rounded cursor-pointer"
                   />
                 </div>
 
                 {/* Roughness */}
                 <div>
-                  <div className="flex justify-between text-[11px] text-[#aaa] mb-1">
+                  <div className="flex justify-between text-[11px] text-slate-300 mb-1">
                     <span>ROUGHNESS</span>
-                    <span className="text-[#FF1A1A]">{rangeSettings.roughness.toFixed(2)}</span>
+                    <span className="text-[#FF2B2B]">{rangeSettings.roughness.toFixed(2)}</span>
                   </div>
                   <input
                     type="range"
@@ -154,15 +190,15 @@ export const RangeEngineSection: React.FC = () => {
                     step="0.05"
                     value={rangeSettings.roughness}
                     onChange={(e) => updateRangeSettings({ roughness: parseFloat(e.target.value) })}
-                    className="w-full accent-[#FF1A1A] bg-[#1a1a1a] h-1.5 rounded cursor-pointer"
+                    className="w-full accent-[#FF2B2B] bg-slate-800 h-1.5 rounded cursor-pointer"
                   />
                 </div>
 
                 {/* Metallic */}
                 <div>
-                  <div className="flex justify-between text-[11px] text-[#aaa] mb-1">
+                  <div className="flex justify-between text-[11px] text-slate-300 mb-1">
                     <span>METALLIC</span>
-                    <span className="text-[#FF1A1A]">{rangeSettings.metallic.toFixed(2)}</span>
+                    <span className="text-[#FF2B2B]">{rangeSettings.metallic.toFixed(2)}</span>
                   </div>
                   <input
                     type="range"
@@ -171,36 +207,18 @@ export const RangeEngineSection: React.FC = () => {
                     step="0.05"
                     value={rangeSettings.metallic}
                     onChange={(e) => updateRangeSettings({ metallic: parseFloat(e.target.value) })}
-                    className="w-full accent-[#FF1A1A] bg-[#1a1a1a] h-1.5 rounded cursor-pointer"
-                  />
-                </div>
-
-                {/* Bloom */}
-                <div>
-                  <div className="flex justify-between text-[11px] text-[#aaa] mb-1">
-                    <span>BLOOM / EMISSION</span>
-                    <span className="text-[#FF1A1A]">{rangeSettings.bloom.toFixed(2)}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.05"
-                    value={rangeSettings.bloom}
-                    onChange={(e) => updateRangeSettings({ bloom: parseFloat(e.target.value) })}
-                    className="w-full accent-[#FF1A1A] bg-[#1a1a1a] h-1.5 rounded cursor-pointer"
+                    className="w-full accent-[#FF2B2B] bg-slate-800 h-1.5 rounded cursor-pointer"
                   />
                 </div>
               </div>
             </div>
 
             {/* Panel Bottom Telemetry */}
-            <div className="pt-3 border-t border-[#1c1c1c] text-[10px] text-[#666] flex justify-between">
-              <span>DRIVER: RANGE_DIRECTX/GL</span>
-              <span className="text-[#00FF66]">UNIFORMS SYNCHRONIZED</span>
+            <div className="pt-3 border-t border-slate-800 text-[10px] text-slate-400 flex justify-between">
+              <span>UNIFORMS LINKED</span>
+              <span className="text-[#00FF88]">REAL-TIME SYNC</span>
             </div>
           </div>
-
         </div>
       </div>
     </section>

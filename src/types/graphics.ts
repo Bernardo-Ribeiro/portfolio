@@ -7,7 +7,9 @@ export type ShaderRenderMode =
   | 'METALLIC'
   | 'GLITCH'
   | 'DISSOLVE'
-  | 'CUSTOM';
+  | 'CUSTOM'
+  | 'ISO_LATTICE'
+  | 'INTERFERENCE';
 
 export type QualityLevel = 'HIGH' | 'MED' | 'LOW';
 
@@ -36,6 +38,23 @@ export interface LabSettings {
   topology: 'SOLID' | 'WIREFRAME' | 'POINTS' | 'NORMALS';
 }
 
+export type CompanionShapeType = 
+  | 'cube'
+  | 'octahedron'
+  | 'icosahedron'
+  | 'torusKnot'
+  | 'dodecahedron'
+  | 'wireSphere';
+
+export interface CompanionState {
+  shape: CompanionShapeType;
+  position: [number, number, number];
+  scale: number;
+  rotationSpeed: number;
+  mode: ShaderRenderMode;
+  wireframe: boolean;
+}
+
 export interface GraphicsContextState {
   reduceMotion: boolean;
   setReduceMotion: (v: boolean) => void;
@@ -52,6 +71,10 @@ export interface GraphicsContextState {
   setCurrentSection: (s: string) => void;
   scrollProgress: number;
   setScrollProgress: (p: number) => void;
+  
+  // 3D Shape Companion State
+  companionState: CompanionState;
+  updateCompanionState: (partial: Partial<CompanionState>) => void;
   
   // Range Engine Scene Settings
   rangeSettings: RangeEngineSettings;
