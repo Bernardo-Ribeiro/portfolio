@@ -82,6 +82,7 @@ export const BenchoFloatingDock: React.FC<BenchoFloatingDockProps> = ({ onOpenCo
               <a
                 key={link.label}
                 href={link.href}
+                aria-label={`Jump to ${link.label} section`}
                 onMouseEnter={() => setHoveredIdx(idx)}
                 onMouseLeave={() => setHoveredIdx(null)}
                 className={`relative p-2 rounded-full transition-all duration-200 flex items-center justify-center ${
@@ -111,6 +112,7 @@ export const BenchoFloatingDock: React.FC<BenchoFloatingDockProps> = ({ onOpenCo
         <button
           onClick={cycleShape}
           type="button"
+          aria-label={`Cycle 3D Shape geometry. Current shape: ${companionState.shape}`}
           className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/[0.04] hover:bg-white/[0.1] border border-slate-700 text-slate-300 hover:text-white transition-all duration-200 text-[11px] cursor-pointer group"
           title={`Click to cycle 3D Shape (Current: ${companionState.shape})`}
         >
@@ -125,6 +127,7 @@ export const BenchoFloatingDock: React.FC<BenchoFloatingDockProps> = ({ onOpenCo
         <button
           onClick={cycleShader}
           type="button"
+          aria-label={`Cycle shader render pipeline. Current shader: ${companionState.mode}`}
           className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/[0.04] hover:bg-white/[0.1] border border-slate-700 text-slate-300 hover:text-white transition-all duration-200 text-[11px] cursor-pointer group"
           title={`Click to cycle Shader (Current: ${companionState.mode})`}
         >
@@ -138,6 +141,7 @@ export const BenchoFloatingDock: React.FC<BenchoFloatingDockProps> = ({ onOpenCo
         <button
           onClick={onOpenCommandBar}
           type="button"
+          aria-label="Open Bencho Command Bar spotlight palette"
           className="flex items-center gap-1.5 px-3 py-1 bg-[#FF2B2B] hover:bg-[#ff4d4d] text-white font-semibold rounded-full transition-all duration-200 text-[11px] cursor-pointer shadow-[0_0_12px_rgba(255,43,43,0.4)]"
           title="Open Bencho Command Bar (⌘K)"
         >

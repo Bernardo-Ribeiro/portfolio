@@ -58,6 +58,7 @@ export const SystemSettingsModal: React.FC = () => {
             <button
               onClick={() => setReduceMotion(!reduceMotion)}
               type="button"
+              aria-label={`Toggle reduce motion. Currently ${reduceMotion ? 'ON' : 'OFF'}`}
               className={`px-3 py-1 text-xs rounded-sm transition-all cursor-pointer ${
                 reduceMotion
                   ? 'border border-[#FF2B2B] bg-[#FF2B2B] text-white font-bold'
@@ -77,6 +78,7 @@ export const SystemSettingsModal: React.FC = () => {
             <button
               onClick={() => setParticles(!particles)}
               type="button"
+              aria-label={`Toggle 3D particles. Currently ${particles ? 'ON' : 'OFF'}`}
               className={`px-3 py-1 text-xs rounded-sm transition-all cursor-pointer ${
                 particles
                   ? 'border border-[#FF2B2B] bg-[#FF2B2B] text-white font-bold'
@@ -96,6 +98,7 @@ export const SystemSettingsModal: React.FC = () => {
             <button
               onClick={() => setPostFx(!postFx)}
               type="button"
+              aria-label={`Toggle post processing effects. Currently ${postFx ? 'ON' : 'OFF'}`}
               className={`px-3 py-1 text-xs rounded-sm transition-all cursor-pointer ${
                 postFx
                   ? 'border border-[#FF2B2B] bg-[#FF2B2B] text-white font-bold'
@@ -120,6 +123,7 @@ export const SystemSettingsModal: React.FC = () => {
                   key={lvl}
                   onClick={() => setQuality(lvl)}
                   type="button"
+                  aria-label={`Set 3D graphics quality to ${lvl}`}
                   className={`py-1.5 text-xs rounded-sm border text-center transition-all cursor-pointer ${
                     quality === lvl
                       ? 'border-[#FF2B2B] bg-[#FF2B2B]/20 text-white font-semibold'

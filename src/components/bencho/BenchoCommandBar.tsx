@@ -305,12 +305,14 @@ export const BenchoCommandBar: React.FC<BenchoCommandBarProps> = ({ isOpen, onCl
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Type a command, section or shader mode (e.g. 'work', 'torus', 'glitch')..."
+            aria-label="Search commands, sections, or shader modes"
             className="flex-1 bg-transparent border-none outline-none text-[#F1F5F9] placeholder:text-slate-500 font-mono text-xs"
           />
           <div className="flex items-center gap-1 text-[10px] text-slate-400 bg-white/[0.04] px-1.5 py-0.5 rounded border border-slate-700">
             <span>ESC</span>
           </div>
           <button
+            type="button"
             onClick={onClose}
             className="text-slate-400 hover:text-white p-1"
             aria-label="Close command bar"

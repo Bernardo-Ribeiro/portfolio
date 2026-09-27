@@ -97,6 +97,7 @@ export const GraphicsLabSection: React.FC = () => {
                 key={tab.id}
                 onClick={() => setActiveExp(tab.id as any)}
                 type="button"
+                aria-label={`Select experiment ${tab.label}`}
                 className={`p-3 border rounded-sm text-left transition-all cursor-pointer ${
                   isActive
                     ? 'border-[#FF2B2B] bg-[#FF2B2B]/15 text-white font-semibold shadow-[0_0_15px_rgba(255,43,43,0.15)]'
@@ -149,6 +150,7 @@ export const GraphicsLabSection: React.FC = () => {
                     </div>
                     <input
                       type="range"
+                      aria-label="Noise Distortion Amount"
                       min="0"
                       max="1.5"
                       step="0.05"
@@ -165,6 +167,7 @@ export const GraphicsLabSection: React.FC = () => {
                     </div>
                     <input
                       type="range"
+                      aria-label="Noise Spatial Frequency Scale"
                       min="0.5"
                       max="6.0"
                       step="0.2"
@@ -181,6 +184,7 @@ export const GraphicsLabSection: React.FC = () => {
                     </div>
                     <input
                       type="range"
+                      aria-label="Noise Time Evolution Speed"
                       min="0"
                       max="2.0"
                       step="0.1"
@@ -197,6 +201,7 @@ export const GraphicsLabSection: React.FC = () => {
                     </div>
                     <input
                       type="range"
+                      aria-label="Displacement Intensity"
                       min="0.2"
                       max="2.5"
                       step="0.1"
@@ -271,6 +276,7 @@ export const GraphicsLabSection: React.FC = () => {
                       step="0.05"
                       value={labSettings.chromaticAberration}
                       onChange={(e) => updateLabSettings({ chromaticAberration: parseFloat(e.target.value) })}
+                      aria-label="Chromatic Aberration Intensity"
                       className="w-full accent-[#FF2B2B] bg-slate-800 h-1.5 rounded cursor-pointer"
                     />
                   </div>
@@ -288,6 +294,7 @@ export const GraphicsLabSection: React.FC = () => {
                       step="0.05"
                       value={labSettings.vignette}
                       onChange={(e) => updateLabSettings({ vignette: parseFloat(e.target.value) })}
+                      aria-label="Vignette Falloff Intensity"
                       className="w-full accent-[#FF2B2B] bg-slate-800 h-1.5 rounded cursor-pointer"
                     />
                   </div>
@@ -344,6 +351,7 @@ export const GraphicsLabSection: React.FC = () => {
                       step="5"
                       value={labSettings.lightAngle}
                       onChange={(e) => updateLabSettings({ lightAngle: parseFloat(e.target.value) })}
+                      aria-label="Light Orbit Angle in Degrees"
                       className="w-full accent-[#FF2B2B] bg-slate-800 h-1.5 rounded cursor-pointer"
                     />
                   </div>
@@ -360,6 +368,7 @@ export const GraphicsLabSection: React.FC = () => {
                       step="0.1"
                       value={labSettings.lightIntensity}
                       onChange={(e) => updateLabSettings({ lightIntensity: parseFloat(e.target.value) })}
+                      aria-label="Directional Light Intensity"
                       className="w-full accent-[#FF2B2B] bg-slate-800 h-1.5 rounded cursor-pointer"
                     />
                   </div>
@@ -404,6 +413,7 @@ export const GraphicsLabSection: React.FC = () => {
                         key={mode}
                         onClick={() => updateLabSettings({ topology: mode })}
                         type="button"
+                        aria-label={`Select topology raster mode ${mode}`}
                         className={`w-full text-left p-3 border rounded-sm transition-all flex items-center justify-between cursor-pointer ${
                           isSelected
                             ? 'border-[#FF2B2B] bg-[#FF2B2B]/15 text-white font-semibold'

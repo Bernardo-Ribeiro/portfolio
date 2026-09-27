@@ -17,6 +17,8 @@ export const WebGPUInspector: React.FC = () => {
         </div>
         <div className="flex items-center gap-1.5">
           <button
+            type="button"
+            aria-label="WebGPU Adapter Probe Tab"
             onClick={() => setActiveTab('doctor')}
             className={`px-3 py-1 text-[11px] rounded-sm transition-all cursor-pointer ${
               activeTab === 'doctor'
@@ -27,6 +29,8 @@ export const WebGPUInspector: React.FC = () => {
             ADAPTER PROBE
           </button>
           <button
+            type="button"
+            aria-label="WebGPU WGSL Pipeline Tab"
             onClick={() => setActiveTab('wgsl')}
             className={`px-3 py-1 text-[11px] rounded-sm transition-all cursor-pointer ${
               activeTab === 'wgsl'
@@ -37,6 +41,8 @@ export const WebGPUInspector: React.FC = () => {
             WGSL PIPELINE
           </button>
           <button
+            type="button"
+            aria-label="WebGPU CLI Tooling Tab"
             onClick={() => setActiveTab('pipeline')}
             className={`px-3 py-1 text-[11px] rounded-sm transition-all cursor-pointer ${
               activeTab === 'pipeline'

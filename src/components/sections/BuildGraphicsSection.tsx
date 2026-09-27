@@ -187,6 +187,7 @@ export const BuildGraphicsSection: React.FC = () => {
                   type="button"
                   onClick={() => handleSelect(d)}
                   onMouseEnter={() => handleSelect(d)}
+                  aria-label={`Select discipline ${d.label} - ${d.sublabel}`}
                   className={`discipline-btn group relative px-4 py-3.5 rounded-sm border text-left transition-all duration-200 cursor-pointer flex items-center justify-between gap-3 ${
                     isSelected
                       ? 'border-[#FF2B2B] bg-[#141824] shadow-[0_0_24px_rgba(255,43,43,0.25)] translate-x-1'

@@ -10,6 +10,8 @@ interface BenchoMagneticButtonProps {
   rel?: string;
   strength?: number; // Distance pull strength (0 to 1)
   textParallax?: boolean;
+  'aria-label'?: string;
+  ariaLabel?: string;
 }
 
 export const BenchoMagneticButton: React.FC<BenchoMagneticButtonProps> = ({
@@ -21,7 +23,10 @@ export const BenchoMagneticButton: React.FC<BenchoMagneticButtonProps> = ({
   rel,
   strength = 0.35,
   textParallax = true,
+  'aria-label': ariaLabelProp,
+  ariaLabel,
 }) => {
+  const effectiveAriaLabel = ariaLabel || ariaLabelProp;
   const containerRef = useRef<HTMLButtonElement & HTMLAnchorElement>(null);
   const contentRef = useRef<HTMLSpanElement>(null);
 
@@ -103,6 +108,7 @@ export const BenchoMagneticButton: React.FC<BenchoMagneticButtonProps> = ({
         target={target}
         rel={rel}
         onClick={onClick}
+        aria-label={effectiveAriaLabel}
         className={`inline-flex items-center justify-center cursor-pointer select-none transition-shadow will-change-transform ${className}`}
       >
         {contentElement}
@@ -113,7 +119,9 @@ export const BenchoMagneticButton: React.FC<BenchoMagneticButtonProps> = ({
   return (
     <button
       ref={containerRef}
+      type="button"
       onClick={onClick}
+      aria-label={effectiveAriaLabel}
       className={`inline-flex items-center justify-center cursor-pointer select-none transition-shadow will-change-transform ${className}`}
     >
       {contentElement}

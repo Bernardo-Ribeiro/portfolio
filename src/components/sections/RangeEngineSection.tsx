@@ -94,6 +94,8 @@ export const RangeEngineSection: React.FC = () => {
                 </div>
                 <button
                   onClick={resetRangeSettings}
+                  type="button"
+                  aria-label="Reset range engine scene settings to defaults"
                   className="flex items-center gap-1 text-[10px] text-slate-400 hover:text-white transition-colors cursor-pointer"
                   title="Reset to defaults"
                 >
@@ -114,7 +116,9 @@ export const RangeEngineSection: React.FC = () => {
                     return (
                       <button
                         key={opt.id}
+                        type="button"
                         onClick={() => handleShaderChange(opt.id)}
+                        aria-label={`Select shader pass ${opt.label}`}
                         className={`w-full text-left px-3 py-2 border rounded-sm transition-all flex items-center justify-between cursor-pointer ${
                           isSelected
                             ? 'border-[#FF2B2B] bg-[#FF2B2B]/10 text-white font-semibold'
@@ -151,6 +155,7 @@ export const RangeEngineSection: React.FC = () => {
                   </div>
                   <input
                     type="range"
+                    aria-label="Ambient Light Intensity"
                     min="0"
                     max="1"
                     step="0.05"
@@ -168,6 +173,7 @@ export const RangeEngineSection: React.FC = () => {
                   </div>
                   <input
                     type="range"
+                    aria-label="Camera Exposure"
                     min="0.2"
                     max="2.5"
                     step="0.1"
@@ -185,6 +191,7 @@ export const RangeEngineSection: React.FC = () => {
                   </div>
                   <input
                     type="range"
+                    aria-label="Surface Roughness"
                     min="0"
                     max="1"
                     step="0.05"
@@ -202,6 +209,7 @@ export const RangeEngineSection: React.FC = () => {
                   </div>
                   <input
                     type="range"
+                    aria-label="Metallic Reflectance"
                     min="0"
                     max="1"
                     step="0.05"

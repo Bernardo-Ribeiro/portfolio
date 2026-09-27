@@ -81,6 +81,7 @@ export const SystemHeader: React.FC<SystemHeaderProps> = ({ onOpenCommandBar }) 
               <button
                 onClick={onOpenCommandBar}
                 type="button"
+                aria-label="Open Command Bar (⌘K)"
                 className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-white/[0.03] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 hover:border-slate-500 transition-all text-[11px] rounded-sm cursor-pointer"
                 title="Open Command Bar (⌘K)"
               >

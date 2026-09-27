@@ -209,9 +209,14 @@ export const OpenSourceSection: React.FC = () => {
                     value={inputVal}
                     onChange={(e) => setInputVal(e.target.value)}
                     placeholder="type 'help', 'whoami', 'vgpu' or 'clear'..."
+                    aria-label="Interactive terminal command input"
                     className="flex-1 bg-transparent border-none outline-none text-white font-mono text-xs placeholder:text-[#444]"
                   />
-                  <button type="submit" className="text-[#666] hover:text-[#FF1A1A]">
+                  <button
+                    type="submit"
+                    aria-label="Submit terminal command"
+                    className="text-[#666] hover:text-[#FF1A1A] cursor-pointer"
+                  >
                     <CornerDownLeft className="w-3.5 h-3.5" />
                   </button>
                 </form>
@@ -229,9 +234,9 @@ export const OpenSourceSection: React.FC = () => {
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-bold text-white font-display">
+                    <h3 className="text-lg font-bold text-white font-display">
                       {hoveredRepo.name}
-                    </h4>
+                    </h3>
                     <div className="text-[11px] text-[#888] mt-1">
                       PRIMARY STACK: <span className="text-[#FF1A1A]">{hoveredRepo.lang}</span>
                     </div>

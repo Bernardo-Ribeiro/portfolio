@@ -11,60 +11,46 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenCommandBar }) =>
   const containerRef = useRef<HTMLElement>(null);
 
   useGSAP(() => {
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    // Prioritize hero title for immediate Largest Contentful Paint (LCP)
+    gsap.fromTo(
+      '.hero-title-line',
+      { opacity: 0, y: 25 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.08,
+        ease: 'power2.out',
+        clearProps: 'all',
+      }
+    );
 
-    tl.from('.hero-status', {
-      opacity: 0,
-      y: -15,
-      duration: 0.8,
-    })
-      .from(
-        '.hero-badge',
-        {
-          opacity: 0,
-          scale: 0.95,
-          duration: 0.6,
-        },
-        '-=0.4'
-      )
-      .from(
-        '.hero-title-line',
-        {
-          opacity: 0,
-          y: 40,
-          duration: 1.0,
-          stagger: 0.12,
-        },
-        '-=0.3'
-      )
-      .from(
-        '.hero-tag',
-        {
-          opacity: 0,
-          y: 15,
-          duration: 0.6,
-          stagger: 0.06,
-        },
-        '-=0.4'
-      )
-      .from(
-        '.hero-actions',
-        {
-          opacity: 0,
-          y: 20,
-          duration: 0.7,
-        },
-        '-=0.3'
-      )
-      .from(
-        '.hero-bottom',
-        {
-          opacity: 0,
-          y: 15,
-          duration: 0.7,
-        },
-        '-=0.3'
-      );
+    gsap.fromTo(
+      ['.hero-status', '.hero-badge'],
+      { opacity: 0, y: -10 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        stagger: 0.06,
+        ease: 'power2.out',
+        clearProps: 'all',
+      }
+    );
+
+    gsap.fromTo(
+      ['.hero-tag', '.hero-actions', '.hero-bottom'],
+      { opacity: 0, y: 15 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        stagger: 0.05,
+        ease: 'power2.out',
+        clearProps: 'all',
+        delay: 0.1,
+      }
+    );
   }, { scope: containerRef });
 
   return (
