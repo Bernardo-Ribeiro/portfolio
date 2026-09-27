@@ -144,7 +144,7 @@ export const OpenSourceSection: React.FC = () => {
               <span className="w-2.5 h-2.5 rounded-full bg-slate-800" />
               <span className="ml-2 text-slate-400 text-[11px]">bernardo@range-lab: ~/projects</span>
             </div>
-            <div className="text-[10px] text-slate-500">
+            <div className="text-[10px] text-slate-400">
               BASH 5.2 // VT100
             </div>
           </div>
@@ -154,7 +154,7 @@ export const OpenSourceSection: React.FC = () => {
             
             {/* Left Column: Interactive File List */}
             <div className="lg:col-span-7 p-6 border-b lg:border-b-0 lg:border-r border-[#1c1c1c] space-y-4">
-              <div className="flex items-center gap-2 text-[#888]">
+              <div className="flex items-center gap-2 text-slate-400">
                 <span className="text-[#FF1A1A] font-bold">$</span>
                 <span className="text-white">ls projects/</span>
               </div>
@@ -171,16 +171,16 @@ export const OpenSourceSection: React.FC = () => {
                       className={`p-2 transition-all flex items-center justify-between cursor-pointer border ${
                         isHovered
                           ? 'border-[#FF1A1A] bg-[#FF1A1A]/10 text-white font-bold'
-                          : 'border-transparent text-[#888] hover:text-[#ddd]'
+                          : 'border-transparent text-slate-400 hover:text-slate-200'
                       }`}
                     >
                       <div className="flex items-center gap-2 truncate">
-                        <span className={isHovered ? 'text-[#FF1A1A]' : 'text-[#444]'}>►</span>
+                        <span className={isHovered ? 'text-[#FF1A1A]' : 'text-slate-500'}>►</span>
                         <span className="tracking-wide">{repo.name}/</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-[10px] text-[#555]">{repo.lang}</span>
-                        <span className="text-[9px] px-1 bg-[#161616] text-[#888] border border-[#222]">
+                        <span className="text-[10px] text-slate-400 font-semibold">{repo.lang}</span>
+                        <span className="text-[9px] px-1 bg-[#161616] text-slate-400 border border-[#222]">
                           {repo.tag}
                         </span>
                       </div>
@@ -242,11 +242,11 @@ export const OpenSourceSection: React.FC = () => {
                     </div>
                   </div>
 
-                  <p className="text-xs text-[#aaa] font-sans leading-relaxed">
+                  <p className="text-xs text-slate-300 font-sans leading-relaxed">
                     {hoveredRepo.desc}
                   </p>
 
-                  <div className="p-3 bg-[#0a0a0a] border border-[#1a1a1a] space-y-1.5 text-[11px] text-[#777]">
+                  <div className="p-3 bg-[#0a0a0a] border border-[#1a1a1a] space-y-1.5 text-[11px] text-slate-400">
                     <div>AUTHOR: Bernardo Ribeiro</div>
                     <div>STATUS: PUBLIC REPOSITORY</div>
                     <div>LICENSE: OPEN SOURCE</div>
@@ -257,7 +257,7 @@ export const OpenSourceSection: React.FC = () => {
                       href={hoveredRepo.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF1A1A] hover:bg-[#ff3838] text-white font-bold text-xs tracking-wider transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-[#DC2626] hover:bg-[#ef4444] text-white font-bold text-xs tracking-wider transition-colors cursor-pointer rounded-xs"
                     >
                       <span>CLONE // VIEW REPO</span>
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -265,12 +265,12 @@ export const OpenSourceSection: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <div className="text-[#555] my-auto text-center">
+                <div className="text-slate-400 my-auto text-center">
                   SELECT A REPOSITORY TO INSPECT DETAILS
                 </div>
               )}
 
-              <div className="pt-4 border-t border-[#181818] text-[10px] text-[#444] flex justify-between">
+              <div className="pt-4 border-t border-[#181818] text-[10px] text-slate-400 flex justify-between">
                 <span>GIT TREE // VERIFIED</span>
                 <span>GITHUB API v3</span>
               </div>

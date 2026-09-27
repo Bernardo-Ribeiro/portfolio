@@ -78,7 +78,10 @@ export const SelectedWorkSection: React.FC = () => {
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     {/* Left: Chapter Number + Category */}
                     <div className="lg:col-span-3 flex lg:flex-col justify-between items-start">
-                      <span className="text-6xl sm:text-7xl font-black font-display text-slate-800 select-none group-hover:text-slate-600 transition-colors">
+                      <span
+                        aria-hidden="true"
+                        className="text-6xl sm:text-7xl font-black font-display text-slate-800 select-none group-hover:text-slate-600 transition-colors"
+                      >
                         {proj.chapter}
                       </span>
                       <div className="mt-2 font-mono text-[11px] text-slate-300 px-2.5 py-1 border border-slate-700 bg-white/[0.03] rounded-sm">
@@ -130,7 +133,7 @@ export const SelectedWorkSection: React.FC = () => {
                           target="_blank"
                           rel="noreferrer"
                           strength={0.25}
-                          className="px-4 py-2 bg-[#FF2B2B] hover:bg-[#ff4d4d] text-white font-semibold rounded-sm shadow-[0_0_12px_rgba(255,43,43,0.3)]"
+                          className="px-4 py-2 bg-[#DC2626] hover:bg-[#ef4444] text-white font-semibold rounded-sm shadow-[0_0_12px_rgba(220,38,38,0.3)]"
                         >
                           <span>VIEW ON GITHUB</span>
                           <ExternalLink className="w-3.5 h-3.5" />

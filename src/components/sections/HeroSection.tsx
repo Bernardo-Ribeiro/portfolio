@@ -119,7 +119,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenCommandBar }) =>
             <BenchoMagneticButton
               href="#work"
               strength={0.3}
-              className="px-5 py-2.5 bg-[#FF2B2B] hover:bg-[#ff4d4d] text-white font-semibold rounded-sm shadow-[0_0_20px_rgba(255,43,43,0.35)]"
+              className="px-5 py-2.5 bg-[#DC2626] hover:bg-[#ef4444] text-white font-semibold rounded-sm shadow-[0_0_20px_rgba(220,38,38,0.35)]"
             >
               <Layers className="w-4 h-4" />
               <span>EXPLORE WORK</span>

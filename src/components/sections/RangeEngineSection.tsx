@@ -118,7 +118,6 @@ export const RangeEngineSection: React.FC = () => {
                         key={opt.id}
                         type="button"
                         onClick={() => handleShaderChange(opt.id)}
-                        aria-label={`Select shader pass ${opt.label}`}
                         className={`w-full text-left px-3 py-2 border rounded-sm transition-all flex items-center justify-between cursor-pointer ${
                           isSelected
                             ? 'border-[#FF2B2B] bg-[#FF2B2B]/10 text-white font-semibold'

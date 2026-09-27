@@ -246,7 +246,6 @@ export const CubeScrubber: React.FC = () => {
               key={stage.id}
               onClick={() => handleSelectStage(idx)}
               type="button"
-              aria-label={`Select pipeline stage ${stage.id}`}
               className={`p-3 text-left font-mono text-xs border rounded-sm transition-all cursor-pointer ${
                 isActive
                   ? 'border-[#FF2B2B] bg-[#FF2B2B]/15 text-white font-semibold shadow-[0_0_12px_rgba(255,43,43,0.2)]'

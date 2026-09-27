@@ -97,7 +97,6 @@ export const GraphicsLabSection: React.FC = () => {
                 key={tab.id}
                 onClick={() => setActiveExp(tab.id as any)}
                 type="button"
-                aria-label={`Select experiment ${tab.label}`}
                 className={`p-3 border rounded-sm text-left transition-all cursor-pointer ${
                   isActive
                     ? 'border-[#FF2B2B] bg-[#FF2B2B]/15 text-white font-semibold shadow-[0_0_15px_rgba(255,43,43,0.15)]'
@@ -413,7 +412,6 @@ export const GraphicsLabSection: React.FC = () => {
                         key={mode}
                         onClick={() => updateLabSettings({ topology: mode })}
                         type="button"
-                        aria-label={`Select topology raster mode ${mode}`}
                         className={`w-full text-left p-3 border rounded-sm transition-all flex items-center justify-between cursor-pointer ${
                           isSelected
                             ? 'border-[#FF2B2B] bg-[#FF2B2B]/15 text-white font-semibold'

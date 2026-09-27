@@ -120,7 +120,7 @@ export const ContactSection: React.FC = () => {
               <BenchoMagneticButton
                 href="mailto:bernardoribeiro.dev@gmail.com"
                 strength={0.2}
-                className="px-3 py-1.5 bg-[#FF2B2B] hover:bg-[#ff4d4d] text-white font-semibold rounded-sm text-xs"
+                className="px-3 py-1.5 bg-[#DC2626] hover:bg-[#ef4444] text-white font-semibold rounded-sm text-xs"
               >
                 <span>SEND EMAIL</span>
               </BenchoMagneticButton>

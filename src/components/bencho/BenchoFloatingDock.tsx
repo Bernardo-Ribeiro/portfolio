@@ -141,8 +141,8 @@ export const BenchoFloatingDock: React.FC<BenchoFloatingDockProps> = ({ onOpenCo
         <button
           onClick={onOpenCommandBar}
           type="button"
-          aria-label="Open Bencho Command Bar spotlight palette"
-          className="flex items-center gap-1.5 px-3 py-1 bg-[#FF2B2B] hover:bg-[#ff4d4d] text-white font-semibold rounded-full transition-all duration-200 text-[11px] cursor-pointer shadow-[0_0_12px_rgba(255,43,43,0.4)]"
+          aria-label="⌘K - Command Bar spotlight palette"
+          className="flex items-center gap-1.5 px-3 py-1 bg-[#DC2626] hover:bg-[#ef4444] text-white font-semibold rounded-full transition-all duration-200 text-[11px] cursor-pointer shadow-[0_0_12px_rgba(220,38,38,0.4)]"
           title="Open Bencho Command Bar (⌘K)"
         >
           <Command className="w-3 h-3" />
