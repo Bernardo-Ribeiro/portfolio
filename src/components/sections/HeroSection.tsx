@@ -11,13 +11,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenCommandBar }) =>
   const containerRef = useRef<HTMLElement>(null);
 
   useGSAP(() => {
-    // Prioritize hero title for immediate Largest Contentful Paint (LCP)
-    gsap.fromTo(
+    // Keep hero title at 100% opacity for instant Largest Contentful Paint (LCP)
+    gsap.from(
       '.hero-title-line',
-      { opacity: 0, y: 25 },
       {
-        opacity: 1,
-        y: 0,
+        y: 20,
         duration: 0.6,
         stagger: 0.08,
         ease: 'power2.out',
@@ -86,7 +84,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenCommandBar }) =>
           <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black font-display tracking-tight text-[#F1F5F9] uppercase leading-[0.88] select-none">
             <span className="hero-title-line block">BERNARDO</span>
             <span
-              className="hero-title-line block text-transparent"
+              className="hero-title-line block text-[#F1F5F9]/80"
               style={{ WebkitTextStroke: '1.5px rgba(241, 245, 249, 0.85)' }}
             >
               RIBEIRO

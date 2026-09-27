@@ -80,7 +80,7 @@ export const SelectedWorkSection: React.FC = () => {
                     <div className="lg:col-span-3 flex lg:flex-col justify-between items-start">
                       <span
                         aria-hidden="true"
-                        className="text-6xl sm:text-7xl font-black font-display text-slate-800 select-none group-hover:text-slate-600 transition-colors"
+                        className="text-6xl sm:text-7xl font-black font-display text-slate-500 select-none group-hover:text-slate-300 transition-colors"
                       >
                         {proj.chapter}
                       </span>
