@@ -1,32 +1,18 @@
-# React + TypeScript + Vite
+# Bernardo Ribeiro — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React, TypeScript, Vite, Three.js and GSAP.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```sh
+pnpm install
+pnpm dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+`pnpm build` checks TypeScript and builds `dist/`. `pnpm lint` runs Oxlint.
+
+The page has five sections: introduction, selected work, Graphics Studio, about and contact. Project details and code samples expand on demand; additional repositories live below the project grid.
+
+The studio brings materials, procedural shaders, lighting, geometry and the WebGPU inspector into one tabbed workspace. The material preview uses Three.js; it is a browser demonstration, not an embedded Range Engine runtime. Links to the former `#build`, `#cube` and `#range` sections lead to this workspace.
+
+GSAP animations use scoped React contexts and respect reduced motion. The studio pauses continuous rendering outside the visible area. Use the system menu to change motion and rendering quality, or Ctrl/⌘ K to open the command palette.
+
+GitHub Actions builds and publishes `dist/` to GitHub Pages. The custom domain is configured in `public/CNAME`.

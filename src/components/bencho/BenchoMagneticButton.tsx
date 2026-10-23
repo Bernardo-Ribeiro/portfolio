@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { gsap } from '../../lib/gsap';
+import { useGraphics } from '../../context/GraphicsContext';
 
 interface BenchoMagneticButtonProps {
   children: React.ReactNode;
@@ -26,6 +27,7 @@ export const BenchoMagneticButton: React.FC<BenchoMagneticButtonProps> = ({
   'aria-label': ariaLabelProp,
   ariaLabel,
 }) => {
+  const { reduceMotion } = useGraphics();
   const effectiveAriaLabel = ariaLabel || ariaLabelProp;
   const containerRef = useRef<HTMLButtonElement & HTMLAnchorElement>(null);
   const contentRef = useRef<HTMLSpanElement>(null);
@@ -37,7 +39,7 @@ export const BenchoMagneticButton: React.FC<BenchoMagneticButtonProps> = ({
 
     // Check if user prefers reduced motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || reduceMotion || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
     const xTo = gsap.quickTo(el, 'x', { duration: 0.35, ease: 'power3.out' });
     const yTo = gsap.quickTo(el, 'y', { duration: 0.35, ease: 'power3.out' });
@@ -66,21 +68,10 @@ export const BenchoMagneticButton: React.FC<BenchoMagneticButtonProps> = ({
     };
 
     const handleMouseLeave = () => {
-      gsap.to(el, {
-        x: 0,
-        y: 0,
-        duration: 0.7,
-        ease: 'elastic.out(1, 0.4)',
-      });
-
-      if (content) {
-        gsap.to(content, {
-          x: 0,
-          y: 0,
-          duration: 0.7,
-          ease: 'elastic.out(1, 0.4)',
-        });
-      }
+      xTo(0);
+      yTo(0);
+      contentXTo?.(0);
+      contentYTo?.(0);
     };
 
     el.addEventListener('mousemove', handleMouseMove);
@@ -91,8 +82,10 @@ export const BenchoMagneticButton: React.FC<BenchoMagneticButtonProps> = ({
       el.removeEventListener('mouseleave', handleMouseLeave);
       gsap.killTweensOf(el);
       if (content) gsap.killTweensOf(content);
+      gsap.set(el, { clearProps: 'transform' });
+      if (content) gsap.set(content, { clearProps: 'transform' });
     };
-  }, [strength, textParallax]);
+  }, [strength, textParallax, reduceMotion]);
 
   const contentElement = (
     <span ref={contentRef} className="inline-flex items-center gap-2 pointer-events-none relative z-10">

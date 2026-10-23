@@ -95,29 +95,24 @@ const MorphableMesh: React.FC = () => {
   }, [geometries]);
 
   const [activeShape, setActiveShape] = useState<CompanionShapeType>(companionState.shape);
-  const prevShapeRef = useRef<CompanionShapeType>(companionState.shape);
 
-  // Smooth pop morph animation on shape change
-  useEffect(() => {
-    if (companionState.shape !== prevShapeRef.current) {
-      prevShapeRef.current = companionState.shape;
-      
-      // Quick collapse -> change shape -> expand
-      gsap.to(scaleRef.current, {
-        value: 0.1,
-        duration: 0.2,
-        ease: 'power2.in',
-        onComplete: () => {
-          setActiveShape(companionState.shape);
-          gsap.to(scaleRef.current, {
-            value: 1,
-            duration: 0.45,
-            ease: 'back.out(1.8)',
-          });
-        },
-      });
+  // Context cleanup also cancels a pending shape swap when scrolling quickly.
+  useGSAP(() => {
+    const shape = companionState.shape;
+    if (shape === activeShape) {
+      scaleRef.current.value = 1;
+      return;
     }
-  }, [companionState.shape]);
+    if (reduceMotion) {
+      setActiveShape(shape);
+      scaleRef.current.value = 1;
+      return;
+    }
+    gsap.timeline()
+      .to(scaleRef.current, { value: 0.1, duration: 0.18, ease: 'power2.in' })
+      .call(() => setActiveShape(shape))
+      .to(scaleRef.current, { value: 1, duration: 0.5, ease: 'back.out(1.5)' });
+  }, { dependencies: [companionState.shape, reduceMotion], revertOnUpdate: true });
 
   // Shader Materials
   const proceduralMat = useMemo(() => new THREE.ShaderMaterial({
@@ -298,27 +293,9 @@ export const GlobalShapeCompanion: React.FC = () => {
         scale: isMobile ? 0.75 : 1.05,
         mode: 'DEFAULT',
       },
-      {
-        id: '#build',
-        shape: 'octahedron',
-        pos: isMobile ? [0, 0.3, 0] : [1.4, -0.05, 0.1],
-        scale: isMobile ? 0.8 : 1.05,
-        mode: 'WIREFRAME',
-      },
-      {
-        id: '#range',
-        shape: 'torusKnot',
-        pos: isMobile ? [0, 0.2, 0] : [0.9, 0, 0.3],
-        scale: isMobile ? 0.7 : 0.95,
-        mode: 'CUSTOM',
-      },
-      {
-        id: '#lab',
-        shape: 'dodecahedron',
-        pos: isMobile ? [0, 0.2, 0] : [1.7, 0.1, 0],
-        scale: isMobile ? 0.75 : 1.0,
-        mode: 'FRESNEL',
-      },
+
+
+
       {
         id: '#work',
         shape: 'icosahedron',
@@ -326,12 +303,13 @@ export const GlobalShapeCompanion: React.FC = () => {
         scale: isMobile ? 0.65 : 0.9,
         mode: 'DEFAULT',
       },
+
       {
-        id: '#cube',
-        shape: 'cube',
-        pos: [0, 0, 0.5],
-        scale: isMobile ? 0.9 : 1.3,
-        mode: 'DEFAULT',
+        id: '#lab',
+        shape: 'dodecahedron',
+        pos: isMobile ? [0, 0.2, 0] : [1.7, 0.1, 0],
+        scale: isMobile ? 0.75 : 1.0,
+        mode: 'FRESNEL',
       },
       {
         id: '#about',

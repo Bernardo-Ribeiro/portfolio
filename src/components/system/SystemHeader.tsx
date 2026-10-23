@@ -8,11 +8,8 @@ interface SystemHeaderProps {
 }
 
 const NAV_LINKS = [
-  { label: 'DISCIPLINE', href: '#build' },
   { label: 'WORK', href: '#work' },
-  { label: 'THE CUBE', href: '#cube' },
-  { label: 'RANGE ENGINE', href: '#range' },
-  { label: 'GRAPHICS LAB', href: '#lab' },
+  { label: 'STUDIO', href: '#lab' },
   { label: 'ABOUT', href: '#about' },
   { label: 'CONTACT', href: '#contact' },
 ];

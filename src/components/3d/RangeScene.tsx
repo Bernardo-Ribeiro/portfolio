@@ -65,7 +65,7 @@ const InteractiveRangeObject: React.FC = () => {
   );
 };
 
-export const RangeScene: React.FC = () => {
+export const RangeScene: React.FC<{ active?: boolean }> = ({ active = true }) => {
   const { rangeSettings, quality } = useGraphics();
   const dpr = quality === 'HIGH' ? [1, 2] : quality === 'MED' ? [1, 1.5] : [1, 1];
 
@@ -73,14 +73,15 @@ export const RangeScene: React.FC = () => {
     <div className="w-full h-full min-h-[460px] relative bg-[#040404] border border-[#222222] overflow-hidden">
       {/* Corner crosshairs */}
       <div className="absolute top-2 left-2 text-[10px] font-mono text-[#858585] z-10 select-none">
-        VIEWPORT: PERSPECTIVE // CAMERA: (0, 1.2, 5.2)
+        MATERIAL PREVIEW
       </div>
       <div className="absolute top-2 right-2 flex items-center gap-2 text-[10px] font-mono text-[#858585] z-10 select-none">
         <span className="inline-block w-2 h-2 rounded-full bg-[#FF1A1A] animate-pulse"></span>
-        RENDERER: RANGE_PBR_V2
+        LIVE
       </div>
 
       <Canvas
+        frameloop={active ? 'always' : 'demand'}
         camera={{ position: [2.5, 1.4, 4.8], fov: 42 }}
         dpr={dpr as [number, number]}
         gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
@@ -88,7 +89,7 @@ export const RangeScene: React.FC = () => {
       >
         {/* Dynamic lights controlled by Range Engine panel */}
         <ambientLight intensity={rangeSettings.ambient} />
-        
+
         <directionalLight
           position={[4, 6, 4]}
           intensity={rangeSettings.exposure * 1.5}
@@ -118,10 +119,10 @@ export const RangeScene: React.FC = () => {
       </Canvas>
 
       {/* Bottom status readout */}
-      <div className="absolute bottom-2 left-2 right-2 flex justify-between items-center text-[10px] font-mono text-[#555] border-t border-[#161616] pt-1 px-1 pointer-events-none">
-        <div>ACTIVE PASS: {rangeSettings.shaderMode}</div>
+      <div className="absolute bottom-2 left-2 right-2 flex justify-between items-center text-[10px] font-mono text-slate-400 border-t border-[#161616] pt-1 px-1 pointer-events-none">
+        <div>{rangeSettings.shaderMode}</div>
         <div>ROUGH: {rangeSettings.roughness.toFixed(2)} | MET: {rangeSettings.metallic.toFixed(2)}</div>
-        <div>SHADOW MAP: 1024x1024 PCF</div>
+
       </div>
     </div>
   );

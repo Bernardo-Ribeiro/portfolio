@@ -55,14 +55,7 @@ export const BenchoCommandBar: React.FC<BenchoCommandBarProps> = ({ isOpen, onCl
       icon: <ArrowRight className="w-4 h-4 text-slate-400" />,
       onSelect: () => handleNavigate('#hero'),
     },
-    {
-      id: 'nav-build',
-      category: 'NAVIGATION',
-      title: 'Jump to Core Discipline',
-      subtitle: 'Graphics, 3D & Shaders statement',
-      icon: <ArrowRight className="w-4 h-4 text-slate-400" />,
-      onSelect: () => handleNavigate('#build'),
-    },
+
     {
       id: 'nav-work',
       category: 'NAVIGATION',
@@ -71,27 +64,13 @@ export const BenchoCommandBar: React.FC<BenchoCommandBarProps> = ({ isOpen, onCl
       icon: <Layers className="w-4 h-4 text-[#FF2B2B]" />,
       onSelect: () => handleNavigate('#work'),
     },
-    {
-      id: 'nav-cube',
-      category: 'NAVIGATION',
-      title: 'Jump to Signature 3D Cube',
-      subtitle: '8 GPU rendering passes scrubber',
-      icon: <Box className="w-4 h-4 text-[#FF2B2B]" />,
-      onSelect: () => handleNavigate('#cube'),
-    },
-    {
-      id: 'nav-range',
-      category: 'NAVIGATION',
-      title: 'Jump to Range Engine Architecture',
-      subtitle: 'Custom lighting, ambient & material pipeline',
-      icon: <Layers className="w-4 h-4 text-[#FF2B2B]" />,
-      onSelect: () => handleNavigate('#range'),
-    },
+
+
     {
       id: 'nav-lab',
       category: 'NAVIGATION',
-      title: 'Jump to Graphics Lab',
-      subtitle: 'Real-time GLSL benchmarks & WebGPU inspector',
+      title: 'Jump to Graphics Studio',
+      subtitle: 'Materials, shaders, lighting & WebGPU',
       icon: <Sparkles className="w-4 h-4 text-[#00FF88]" />,
       onSelect: () => handleNavigate('#lab'),
     },
@@ -256,12 +235,6 @@ export const BenchoCommandBar: React.FC<BenchoCommandBarProps> = ({ isOpen, onCl
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        if (isOpen) onClose();
-        else setQuery('');
-      }
-
       if (!isOpen) return;
 
       if (e.key === 'Escape') {
