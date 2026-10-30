@@ -45,9 +45,9 @@ export const GraphicsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return false;
   });
 
-  const [particles, setParticles] = useState<boolean>(true);
+  const [particles, setParticles] = useState<boolean>(() => !window.matchMedia('(max-width: 767px)').matches);
   const [postFx, setPostFx] = useState<boolean>(false);
-  const [quality, setQuality] = useState<QualityLevel>('HIGH');
+  const [quality, setQuality] = useState<QualityLevel>(() => window.matchMedia('(max-width: 767px)').matches ? 'LOW' : 'HIGH');
   const [currentSection, setCurrentSection] = useState<string>('hero');
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
@@ -66,7 +66,10 @@ export const GraphicsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const lastTimeRef = useRef<number>(performance.now());
 
   useEffect(() => {
+    if (window.matchMedia('(max-width: 767px)').matches && !isSettingsOpen) return;
     let animId: number;
+    lastTimeRef.current = performance.now();
+    frameCountRef.current = 0;
     const calculateFps = (time: number) => {
       frameCountRef.current++;
       const delta = time - lastTimeRef.current;
@@ -80,19 +83,25 @@ export const GraphicsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     animId = requestAnimationFrame(calculateFps);
     return () => cancelAnimationFrame(animId);
-  }, []);
+  }, [isSettingsOpen]);
 
   // Window scroll progress tracker
   useEffect(() => {
+    let frame = 0;
     const handleScroll = () => {
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalScroll > 0) {
-        setScrollProgress(window.scrollY / totalScroll);
-      }
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+        setScrollProgress(totalScroll > 0 ? window.scrollY / totalScroll : 0);
+        frame = 0;
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(frame);
+    };
   }, []);
 
   const updateRangeSettings = (partial: Partial<RangeEngineSettings>) => {

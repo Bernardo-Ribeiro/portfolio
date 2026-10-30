@@ -86,13 +86,13 @@ export function GraphicsLabSection() {
         <div ref={panelRef} id="studio-panel" role="tabpanel" aria-labelledby={`tab-${activeTab}`} tabIndex={0}>
           {activeTab === 'webgpu' ? <div className="p-4 sm:p-6"><WebGPUInspector /></div> : <div className="studio-grid">
             <div className="studio-preview">
-              {activeTab === 'materials' ? <RangeScene active={isVisible} /> : <>
+              {activeTab === 'materials' ? (isVisible ? <RangeScene /> : <div className="w-full h-full bg-[#040404] border border-[#222222]" />) : <>
                 <div className="studio-preview-label">{active.label} <span>LIVE RENDER</span></div>
-                <Canvas frameloop={isVisible ? 'always' : 'demand'} key={activeTab} camera={{ position: activeTab === 'light' ? [0, 2, 5] : [0, 0, 4.5], fov: 45 }} dpr={dpr} shadows={activeTab === 'light'}>
+                {isVisible && <Canvas key={activeTab} camera={{ position: activeTab === 'light' ? [0, 2, 5] : [0, 0, 4.5], fov: 45 }} dpr={dpr} shadows={activeTab === 'light' && quality !== 'LOW'}>
                   {activeTab === 'noise' && <LabProceduralMesh />}
                   {activeTab === 'light' && <LabLightingScene />}
                   {activeTab === 'topology' && <LabTopologyScene />}
-                </Canvas>
+                </Canvas>}
               </>}
               {activeTab === 'noise' && <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(circle, transparent 35%, rgba(0,0,0,${lab.vignette}) 100%)` }} />}
             </div>
