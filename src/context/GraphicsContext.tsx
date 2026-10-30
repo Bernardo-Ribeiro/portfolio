@@ -36,8 +36,11 @@ const DEFAULT_COMPANION_STATE: CompanionState = {
 };
 
 const GraphicsContext = createContext<GraphicsContextState | undefined>(undefined);
+const COMPACT_VIEWPORT_QUERY = '(max-width: 900px)';
 
 export const GraphicsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [compactViewport, setCompactViewport] = useState(() => window.matchMedia(COMPACT_VIEWPORT_QUERY).matches);
+
   const [reduceMotion, setReduceMotion] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -45,19 +48,18 @@ export const GraphicsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return false;
   });
 
-  const [particles, setParticles] = useState<boolean>(() => !window.matchMedia('(max-width: 900px)').matches);
-  const [postFx, setPostFx] = useState<boolean>(false);
-  const [quality, setQuality] = useState<QualityLevel>(() => window.matchMedia('(max-width: 900px)').matches ? 'LOW' : 'HIGH');
+  const [particles, setParticles] = useState<boolean>(() => !compactViewport);
+  const [quality, setQuality] = useState<QualityLevel>(() => compactViewport ? 'LOW' : 'HIGH');
   const [currentSection, setCurrentSection] = useState<string>('hero');
   const [scrollProgress, setScrollProgress] = useState<number>(0);
-  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [isSettingsOpen, setIsSettingsOpenState] = useState<boolean>(false);
 
   const [companionState, setCompanionState] = useState(DEFAULT_COMPANION_STATE);
   const [rangeSettings, setRangeSettings] = useState<RangeEngineSettings>(DEFAULT_RANGE_SETTINGS);
   const [labSettings, setLabSettings] = useState<LabSettings>(DEFAULT_LAB_SETTINGS);
 
   // Live performance stats
-  const [fps, setFps] = useState<number>(60);
+  const [fps, setFps] = useState<number | null>(null);
   const [triangles] = useState<number>(12); // Default Range Cube is 12 tris (6 faces * 2 tris)
   const [drawCalls] = useState<number>(1);
 
@@ -65,8 +67,23 @@ export const GraphicsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const frameCountRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(performance.now());
 
+  const setIsSettingsOpen = (open: boolean) => {
+    if (compactViewport && open) setFps(null);
+    setIsSettingsOpenState(open);
+  };
+
   useEffect(() => {
-    if (window.matchMedia('(max-width: 900px)').matches && !isSettingsOpen) return;
+    const media = window.matchMedia(COMPACT_VIEWPORT_QUERY);
+    const onChange = (event: MediaQueryListEvent) => {
+      setCompactViewport(event.matches);
+      setFps(null);
+    };
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
+  }, []);
+
+  useEffect(() => {
+    if (compactViewport && !isSettingsOpen) return;
     let animId: number;
     lastTimeRef.current = performance.now();
     frameCountRef.current = 0;
@@ -83,7 +100,7 @@ export const GraphicsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     animId = requestAnimationFrame(calculateFps);
     return () => cancelAnimationFrame(animId);
-  }, [isSettingsOpen]);
+  }, [compactViewport, isSettingsOpen]);
 
   // Window scroll progress tracker
   useEffect(() => {
@@ -123,12 +140,11 @@ export const GraphicsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   return (
     <GraphicsContext.Provider
       value={{
+        compactViewport,
         reduceMotion,
         setReduceMotion,
         particles,
         setParticles,
-        postFx,
-        setPostFx,
         quality,
         setQuality,
         fps,

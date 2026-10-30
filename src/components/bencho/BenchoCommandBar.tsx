@@ -21,7 +21,7 @@ export const BenchoCommandBar: React.FC<BenchoCommandBarProps> = ({ isOpen, onCl
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { updateCompanionState, setIsSettingsOpen } = useGraphics();
+  const { compactViewport, updateCompanionState, setIsSettingsOpen } = useGraphics();
 
   const handleNavigate = (hash: string) => {
     onClose();
@@ -218,14 +218,15 @@ export const BenchoCommandBar: React.FC<BenchoCommandBarProps> = ({ isOpen, onCl
 
   const filteredActions = ACTIONS.filter(
     (act) =>
-      act.title.toLowerCase().includes(query.toLowerCase()) ||
-      act.subtitle?.toLowerCase().includes(query.toLowerCase()) ||
-      act.category.toLowerCase().includes(query.toLowerCase())
+      (!compactViewport || (act.category !== '3D COMPANION' && act.category !== 'SHADERS')) &&
+      (act.title.toLowerCase().includes(query.toLowerCase()) ||
+        act.subtitle?.toLowerCase().includes(query.toLowerCase()) ||
+        act.category.toLowerCase().includes(query.toLowerCase()))
   );
 
   useEffect(() => {
     setSelectedIndex(0);
-  }, [query]);
+  }, [query, compactViewport]);
 
   useEffect(() => {
     if (isOpen) {
@@ -277,8 +278,8 @@ export const BenchoCommandBar: React.FC<BenchoCommandBarProps> = ({ isOpen, onCl
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Type a command, section or shader mode (e.g. 'work', 'torus', 'glitch')..."
-            aria-label="Search commands, sections, or shader modes"
+            placeholder={compactViewport ? "Type a command or section (e.g. 'work')..." : "Type a command, section or shader mode (e.g. 'work', 'torus', 'glitch')..."}
+            aria-label={compactViewport ? 'Search commands or sections' : 'Search commands, sections, or shader modes'}
             className="flex-1 bg-transparent border-none outline-none text-[#F1F5F9] placeholder:text-slate-500 font-mono text-xs"
           />
           <div className="flex items-center gap-1 text-[10px] text-slate-400 bg-white/[0.04] px-1.5 py-0.5 rounded border border-slate-700">

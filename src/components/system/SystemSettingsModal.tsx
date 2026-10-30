@@ -6,14 +6,13 @@ import { BenchoMagneticButton } from '../bencho/BenchoMagneticButton';
 
 export const SystemSettingsModal: React.FC = () => {
   const {
+    compactViewport,
     isSettingsOpen,
     setIsSettingsOpen,
     reduceMotion,
     setReduceMotion,
     particles,
     setParticles,
-    postFx,
-    setPostFx,
     quality,
     setQuality,
     fps,
@@ -70,7 +69,7 @@ export const SystemSettingsModal: React.FC = () => {
           </div>
 
           {/* Particles */}
-          <div className="flex items-center justify-between p-3.5 bg-[#161A26] border border-slate-800 rounded-sm">
+          {!compactViewport && <div className="flex items-center justify-between p-3.5 bg-[#161A26] border border-slate-800 rounded-sm">
             <div>
               <div className="text-slate-200 text-xs font-semibold">PARTICLES &amp; STARFIELD</div>
               <div className="text-slate-400 text-[11px]">Ambient background 3D dust &amp; emitters</div>
@@ -87,27 +86,7 @@ export const SystemSettingsModal: React.FC = () => {
             >
               {particles ? 'ON' : 'OFF'}
             </button>
-          </div>
-
-          {/* Post FX */}
-          <div className="flex items-center justify-between p-3.5 bg-[#161A26] border border-slate-800 rounded-sm">
-            <div>
-              <div className="text-slate-200 text-xs font-semibold">POST FX &amp; BLOOM</div>
-              <div className="text-slate-400 text-[11px]">Hardware post-processing passes</div>
-            </div>
-            <button
-              onClick={() => setPostFx(!postFx)}
-              type="button"
-              aria-label={`Toggle post processing effects. Currently ${postFx ? 'ON' : 'OFF'}`}
-              className={`px-3 py-1 text-xs rounded-sm transition-all cursor-pointer ${
-                postFx
-                  ? 'border border-[#FF2B2B] bg-[#FF2B2B] text-white font-bold'
-                  : 'border border-slate-700 bg-[#11141D] text-slate-400 hover:text-white'
-              }`}
-            >
-              {postFx ? 'ON' : 'OFF'}
-            </button>
-          </div>
+          </div>}
 
           {/* 3D Quality */}
           <div className="p-3.5 bg-[#161A26] border border-slate-800 rounded-sm">
@@ -138,7 +117,7 @@ export const SystemSettingsModal: React.FC = () => {
 
           {/* Runtime stats */}
           <div className="p-3 bg-[#0C0E14] border border-slate-800 rounded-sm text-[11px] text-slate-400 flex justify-between">
-            <span>LIVE FPS: <strong className="text-slate-200">{fps}</strong></span>
+            <span>LIVE FPS: <strong className="text-slate-200">{fps ?? '—'}</strong></span>
             <span>BACKEND: <strong className="text-[#FF2B2B]">WEBGL2 / VGPU</strong></span>
           </div>
         </div>

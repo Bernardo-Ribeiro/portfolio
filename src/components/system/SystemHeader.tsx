@@ -15,7 +15,7 @@ const NAV_LINKS = [
 ];
 
 export const SystemHeader: React.FC<SystemHeaderProps> = ({ onOpenCommandBar }) => {
-  const { fps, setIsSettingsOpen, scrollProgress } = useGraphics();
+  const { compactViewport, fps, setIsSettingsOpen, scrollProgress } = useGraphics();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -68,10 +68,10 @@ export const SystemHeader: React.FC<SystemHeaderProps> = ({ onOpenCommandBar }) 
           {/* Right Controls: FPS + Command Bar + SYSTEM Button */}
           <div className="flex items-center gap-2.5">
             {/* Live FPS metric */}
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-white/[0.03] border border-slate-800/80 rounded-sm text-[10px] text-slate-400">
+            {!compactViewport && <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white/[0.03] border border-slate-800/80 rounded-sm text-[10px] text-slate-400">
               <span className="text-[#FF2B2B] font-bold">FPS</span>
-              <span className="text-slate-200">{fps}</span>
-            </div>
+              <span className="text-slate-200">{fps ?? '—'}</span>
+            </div>}
 
             {/* Bencho Command Bar Trigger */}
             {onOpenCommandBar && (

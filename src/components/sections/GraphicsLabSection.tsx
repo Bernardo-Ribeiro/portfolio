@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { ArrowUpRight, RotateCcw } from 'lucide-react';
 import { RangeScene } from '../3d/RangeScene';
@@ -35,7 +35,8 @@ function Slider({ label, value, min = 0, max = 1, step = 0.05, onChange }: {
   </label>;
 }
 
-export function GraphicsLabSection() {
+export function GraphicsLabSection({ onReady }: { onReady?: () => void }) {
+  useLayoutEffect(() => onReady?.(), [onReady]);
   const sectionRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);

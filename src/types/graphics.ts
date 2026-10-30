@@ -56,15 +56,14 @@ export interface CompanionState {
 }
 
 export interface GraphicsContextState {
+  compactViewport: boolean;
   reduceMotion: boolean;
   setReduceMotion: (v: boolean) => void;
   particles: boolean;
   setParticles: (v: boolean) => void;
-  postFx: boolean;
-  setPostFx: (v: boolean) => void;
   quality: QualityLevel;
   setQuality: (q: QualityLevel) => void;
-  fps: number;
+  fps: number | null;
   triangles: number;
   drawCalls: number;
   currentSection: string;
