@@ -90,11 +90,12 @@ export const SystemHeader: React.FC<SystemHeaderProps> = ({ onOpenCommandBar }) 
             {/* System config trigger */}
             <BenchoMagneticButton
               onClick={() => setIsSettingsOpen(true)}
+              ariaLabel="Open graphics settings"
               strength={0.2}
               className="px-3 py-1 bg-white/[0.04] hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700/80 hover:border-slate-500 rounded-sm text-[11px] tracking-wider"
             >
               <Sliders className="w-3 h-3 text-[#FF2B2B]" />
-              <span>SYSTEM</span>
+              <span className="header-system-label">SYSTEM</span>
             </BenchoMagneticButton>
 
             {/* Mobile Hamburger */}

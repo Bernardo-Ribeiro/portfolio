@@ -45,10 +45,10 @@ function DeferredGraphicsLab() {
 
 const MainPortfolio: React.FC = () => {
   const [isCommandBarOpen, setIsCommandBarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches);
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 900px)').matches);
 
   useEffect(() => {
-    const media = window.matchMedia('(max-width: 767px)');
+    const media = window.matchMedia('(max-width: 900px)');
     const onChange = () => setIsMobile(media.matches);
     media.addEventListener('change', onChange);
     return () => media.removeEventListener('change', onChange);

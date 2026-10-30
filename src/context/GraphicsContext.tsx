@@ -45,9 +45,9 @@ export const GraphicsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return false;
   });
 
-  const [particles, setParticles] = useState<boolean>(() => !window.matchMedia('(max-width: 767px)').matches);
+  const [particles, setParticles] = useState<boolean>(() => !window.matchMedia('(max-width: 900px)').matches);
   const [postFx, setPostFx] = useState<boolean>(false);
-  const [quality, setQuality] = useState<QualityLevel>(() => window.matchMedia('(max-width: 767px)').matches ? 'LOW' : 'HIGH');
+  const [quality, setQuality] = useState<QualityLevel>(() => window.matchMedia('(max-width: 900px)').matches ? 'LOW' : 'HIGH');
   const [currentSection, setCurrentSection] = useState<string>('hero');
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
@@ -66,7 +66,7 @@ export const GraphicsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const lastTimeRef = useRef<number>(performance.now());
 
   useEffect(() => {
-    if (window.matchMedia('(max-width: 767px)').matches && !isSettingsOpen) return;
+    if (window.matchMedia('(max-width: 900px)').matches && !isSettingsOpen) return;
     let animId: number;
     lastTimeRef.current = performance.now();
     frameCountRef.current = 0;
